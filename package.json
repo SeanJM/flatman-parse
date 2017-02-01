@@ -1,0 +1,18 @@
+{
+  "name": "flatman-parse",
+  "version": "0.0.0",
+  "license": "MIT",
+  "author": "Sean MacIsaac <seanjmacisaac@gmail.com> (http://twitter.com/seanjmacisaac)",
+  "main": "index.js",
+  "scripts": {
+    "test": "test/index.js"
+  },
+  "dependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "lodash": "^4.17.4",
+    "match-file-utility": "^3.4.0"
+  }
+}
