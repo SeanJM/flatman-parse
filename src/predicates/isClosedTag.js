@@ -1,6 +1,4 @@
-function isClosedTag(str, i) {
-  return (
-    str[i] === '<' &&
-    str[i + 1] === '/'
-  );
+function isClosedTag(props) {
+  const s = props.string.substring(props.index, props.index + 2);
+  return s === '</' || s === '/>';
 }
