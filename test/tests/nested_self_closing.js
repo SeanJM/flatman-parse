@@ -1,25 +1,21 @@
 const parse = require('../../index.js');
 
 module.exports = {
-  name : '1 node with 1 child',
+  name : 'Nested self closing',
   this : function () {
     return parse(`
-<div class="parent">
-  <div class="parent-1"></div>
+<div>
+  <div/>
 </div>
     `);
   },
   isDeepEqual : function () {
     return [{
       tagName : 'div',
-      attributes : {
-        className : 'parent'
-      },
+      attributes : {},
       childNodes : [{
         tagName : 'div',
-        attributes : {
-          className : 'parent-1'
-        },
+        attributes : {},
         childNodes : []
       }]
     }];

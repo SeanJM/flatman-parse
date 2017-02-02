@@ -1,12 +1,18 @@
-const fs = require('fs');
-const path = require('path');
-const str = fs.readFileSync(path.resolve('test/tests/parseHtml_nested_simple.html'), 'utf8');
 const parse = require('../../index.js');
 
 module.exports = {
   name : '2 Children with 2 children',
   this : function () {
-    return parse(str);
+    return parse(`
+<div class="parent">
+  <div class="parent-1"></div>
+  <div class="parent-2"></div>
+</div>
+<div class="parent2">
+  <div class="parent2-1"></div>
+  <div class="parent2-2"></div>
+</div>
+    `);
   },
   isDeepEqual : function () {
     return [{

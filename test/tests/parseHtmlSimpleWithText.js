@@ -1,12 +1,11 @@
-const fs = require('fs');
-const path = require('path');
-const str = fs.readFileSync(path.resolve('test/tests/parseHtmlSimpleWithText.html'), 'utf8');
 const parse = require('../../index.js');
 
 module.exports = {
   name : 'With one text node',
   this : function () {
-    return parse(str);
+    return parse(`
+<div class="test">   a text string</div>
+    `);
   },
   isDeepEqual : function () {
     return [{

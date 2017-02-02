@@ -1,19 +1,16 @@
 const parse = require('../../index.js');
 
 module.exports = {
-  name : 'input',
+  name : 'Comment',
   this : function () {
     return parse(`
-<input type="text">
+<!--This is a comment-->
     `);
   },
   isDeepEqual : function () {
     return [{
-      tagName : 'input',
-      attributes : {
-        type : 'text'
-      },
-      childNodes : []
+      tagName : 'comment',
+      value : 'This is a comment'
     }];
   }
 };
