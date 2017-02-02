@@ -14,11 +14,11 @@ function captureNode(props) {
 
   props.index += 1;
 
-  if (innerTag[props.index - 3] === '/') {
+  if (innerTag[innerTag.length - 1] === '/') {
     node = getNode(innerTag.substring(0, innerTag.length - 1));
     capture = false;
     props.nodes.push(node);
-    reset(props);
+    resetCapture(props);
   } else {
     node = getNode(innerTag);
   }
@@ -28,16 +28,16 @@ function captureNode(props) {
   if (isSelfClosingTag(node.tagName)) {
     capture = false;
     props.nodes.push(node);
-    reset(props);
+    resetCapture(props);
   }
 
   while (props.index < props.length && capture) {
-    if (isOpenAndClosed(props.string, props.index)) {
+    if (isOpenAndClosed(props)) {
       props.open += 1;
       props.closed += 1;
-    } else if (isOpenTag(props.string, props.index)) {
+    } else if (isOpenTag(props)) {
       props.open += 1;
-    } if (isClosedTag(props.string, props.index)) {
+    } if (isClosedTag(props)) {
       props.closed += 1;
     }
 
@@ -50,7 +50,7 @@ function captureNode(props) {
         props.index += 1;
       }
 
-      reset(props);
+      resetCapture(props);
       capture = false;
     }
 
