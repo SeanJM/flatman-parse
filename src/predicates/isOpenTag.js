@@ -1,7 +1,7 @@
-function isOpenTag(str, i) {
+function isOpenTag(props) {
   return (
-    str[i] === '<' &&
-    str[i + 1] !== '/' &&
-    str.substring(i, i + 4) !== '<!--'
+    props.string[props.index] === '<' &&
+    props.string[props.index + 1] !== '/' &&
+    props.string.substring(props.index, props.index + 2) !== '<!'
   );
 }
