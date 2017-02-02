@@ -1,3 +1,3 @@
-function isText(str, i) {
-  return str[i] !== '<';
+function isText(props) {
+  return props.string[props.index] !== '<';
 }
