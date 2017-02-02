@@ -22,6 +22,8 @@ function getNode(str) {
     i++;
   }
 
+  node.tagName === node.tagName.toLowerCase();
+
   for (; i < n; i++) {
     if (isSpace(str[i])) {
       getAttrName = true;
@@ -35,7 +37,7 @@ function getNode(str) {
       i++;
     } else if (getAttrValue && str[i] === stringChar) {
       getAttrValue = false;
-      node.attributes[attr.name === 'class' ? 'className' : attr.name] = attr.value;
+      node.attributes[filterAttributeName(attr.name)] = attr.value;
       attr.name = '';
       attr.value = '';
     } else if (getAttrName) {
