@@ -36,6 +36,89 @@ function isSpace(str) {
 function isText(str, i) {
   return str[i] !== '<';
 }
+function captureNode(props) {
+  var capture = true;
+  var innerTag = '';
+  var node;
+
+  // Get inner tag
+  props.open += 1;
+  props.index += 1;
+
+  while (props.string[props.index] !== '>' && props.string[props.index]) {
+    innerTag += props.string[props.index];
+    props.index += 1;
+  }
+
+  props.index += 1;
+
+  if (innerTag[props.index - 3] === '/') {
+    node = getNode(innerTag.substring(0, innerTag.length - 1));
+    capture = false;
+    props.nodes.push(node);
+    reset(props);
+  } else {
+    node = getNode(innerTag);
+  }
+
+  innerTag = '';
+
+  if (isSelfClosingTag(node.tagName)) {
+    capture = false;
+    props.nodes.push(node);
+    reset(props);
+  }
+
+  while (props.index < props.length && capture) {
+    if (isOpenAndClosed(props.string, props.index)) {
+      props.open += 1;
+      props.closed += 1;
+    } else if (isOpenTag(props.string, props.index)) {
+      props.open += 1;
+    } if (isClosedTag(props.string, props.index)) {
+      props.closed += 1;
+    }
+
+    if (props.open - props.closed === 0) {
+      node.childNodes = parse(props.content);
+      props.nodes.push(node);
+
+      // Go to the end of the closed tag
+      while (props.string[props.index] !== '>' && props.string[props.index]) {
+        props.index += 1;
+      }
+
+      reset(props);
+      capture = false;
+    }
+
+    if (props.open > props.closed) {
+      props.content += props.string[props.index];
+    }
+
+    props.index += 1;
+  }
+}
+function captureText(props) {
+  var temp;
+
+  while (props.string[props.index] !== '<' && props.index < props.length) {
+    props.index += 1;
+  }
+
+  props.index -= 1;
+
+  temp = props.string.substring(
+    props.anchor,
+    props.index + 1
+  );
+
+  if (temp.trim()) {
+    props.nodes.push(temp);
+  }
+
+  reset(props);
+}
 function getNode(str) {
   var getAttrName = false;
   var getAttrValue = false;
@@ -86,106 +169,34 @@ function getNode(str) {
   return node;
 }
 function parse(str) {
-  var n = str.length;
-  var i = 0;
-  var nodes = [];
-  var node;
+  var props = {
+    content : '',
+    string : str,
+    index : 0,
+    anchor : 0,
+    open : 0,
+    closed : 0,
+    length : str.length,
+    nodes : []
+  };
 
-  var anchor = 0;
-  var open = 0;
-  var closed = 0;
-
-  var content = '';
-  var innerTag = '';
-
-  function reset() {
-    open = 0;
-    closed = 0;
-    anchor = i;
-    content = '';
-  }
-
-  function captureText() {
-    var t;
-    while (str[i] !== '<' && i < n) {
-      i += 1;
-    }
-    i--;
-    t = str.substring(anchor, i + 1);
-    if (t.trim()) {
-      nodes.push(str.substring(anchor, i + 1));
-    }
-    reset();
-  }
-
-  function captureTag() {
-    var capture = true;
-
-    // Get inner tag
-    open += 1;
-    i += 1;
-    while (str[i] !== '>' && str[i]) {
-      innerTag += str[i];
-      i += 1;
-    }
-    i += 1;
-
-    if (innerTag[i - 3] === '/') {
-      node = getNode(innerTag.substring(0, innerTag.length - 1));
-      capture = false;
-      nodes.push(node);
-      reset();
-    } else {
-      node = getNode(innerTag);
-    }
-
-    innerTag = '';
-
-    if (isSelfClosingTag(node.tagName)) {
-      capture = false;
-      nodes.push(node);
-      reset();
-    }
-
-    while (i < n && capture) {
-      if (isOpenAndClosed(str, i)) {
-        open += 1;
-        closed += 1;
-      } else if (isOpenTag(str, i)) {
-        open += 1;
-      } if (isClosedTag(str, i)) {
-        closed += 1;
-      }
-
-      if (open - closed === 0) {
-        node.childNodes = parse(content);
-        nodes.push(node);
-
-        // Go to the end of the closed tag
-        while (str[i] !== '>' && str[i]) i++;
-
-        reset();
-        capture = false;
-      }
-
-      if (open > closed) {
-        content += str[i];
-      }
-
-      i++;
-    }
-  }
-
-  for (; i < n; i++) {
-    if (!isSpace(str[i])) {
-      if (isOpenTag(str, i)) {
-        captureTag();
-      } else if (isText(str, i)) {
-        captureText();
+  for (; props.index < props.length; props.index++) {
+    if (!isSpace(props.string[props.index])) {
+      if (isOpenTag(props.string, props.index)) {
+        captureNode(props);
+      } else if (isText(props.string, props.index)) {
+        captureText(props);
       }
     }
   }
-  return nodes;
+
+  return props.nodes;
+}
+function reset(props) {
+  props.open = 0;
+  props.closed = 0;
+  props.anchor = props.index;
+  props.content = '';
 }
 if (typeof module === 'object') {
   module.exports = parse;
