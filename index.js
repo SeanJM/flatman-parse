@@ -1,40 +1,105 @@
 (function () {
-var SELF_CLOSING = [
-  'img',
-  'input',
-  'hr',
-  'br'
-];
-function isClosedTag(str, i) {
-  return (
-    str[i] === '<' &&
-    str[i + 1] === '/'
-  );
+var SELF_CLOSING = {
+  img : true,
+  input : true,
+  hr : true,
+  br : true
+};
+function isClosedTag(props) {
+  const s = props.string.substring(props.index, props.index + 2);
+  return s === '</' || s === '/>';
 }
-function isOpenAndClosed(str, i) {
-  return (
-    str.substring(i, i + 6) === '<input'
-  );
+function isComment(props) {
+  return props.string.substring(props.index, props.index + 4) === '<!--';
 }
-function isOpenTag(str, i) {
+function isDocType(props) {
+  const s = props.string
+    .substring(props.index, props.index + 9)
+    .toLowerCase();
+  return s === '<!doctype';
+}
+function isOpenAndClosed(props) {
+  const s = props.string
+    .substring(props.index + 1, props.index + 6)
+    .toLowerCase();
+  return SELF_CLOSING[s];
+}
+function isOpenTag(props) {
   return (
-    str[i] === '<' &&
-    str[i + 1] !== '/' &&
-    str.substring(i, i + 4) !== '<!--'
+    props.string[props.index] === '<' &&
+    props.string[props.index + 1] !== '/' &&
+    props.string.substring(props.index, props.index + 2) !== '<!'
   );
 }
 function isSelfClosingTag(tagName) {
-  return (
-    tagName === 'input' ||
-    tagName === 'hr' ||
-    tagName === 'br'
-  );
+  return SELF_CLOSING[tagName];
 }
 function isSpace(str) {
   return str === ' ' || str === '\t' || str === '\n';
 }
-function isText(str, i) {
-  return str[i] !== '<';
+function isText(props) {
+  return props.string[props.index] !== '<';
+}
+function captureComment(props) {
+  var innerComment = '';
+
+  props.index += 4;
+
+  while (props.string.substring(props.index, props.index + 3) !== '-->' && props.string[props.index]) {
+    innerComment += props.string[props.index];
+    props.index += 1;
+  }
+
+  props.index += 3;
+
+  props.nodes.push({
+    tagName : 'comment',
+    value : innerComment
+  });
+
+  resetCapture(props);
+}
+function captureDocType(props) {
+  let inner = '';
+  let identifiers = [];
+  let identifiersString;
+  let rootAndType;
+  let strChar;
+
+  props.index += 2;
+
+  while (props.string.substring(props.index, props.index + 3) !== '>' && props.string[props.index]) {
+    inner += props.string[props.index];
+    props.index += 1;
+
+    if ((
+      props.string[props.index] === '"'
+      || props.string[props.index] === '\''
+    ) && !strChar) {
+      strChar = props.string[props.index];
+      identifiersString = '';
+      while (props.string[props.index + 1] !== strChar && props.string[props.index]) {
+        props.index += 1;
+        identifiersString += props.string[props.index];
+      }
+      props.index += 1;
+      strChar = undefined;
+      identifiers.push(identifiersString);
+    }
+  }
+
+  props.index += 1;
+  rootAndType = inner.split(' ');
+
+  props.nodes.push({
+    tagName : 'doctype',
+    rootElement : rootAndType[1],
+    type : rootAndType[2] && rootAndType[2].trim().toLowerCase(),
+    publicIdentifier : identifiers[0],
+    privateIdentifier : identifiers[1]
+  });
+
+  resetCapture(props);
 }
 function captureNode(props) {
   var capture = true;
@@ -52,11 +117,11 @@ function captureNode(props) {
 
   props.index += 1;
 
-  if (innerTag[props.index - 3] === '/') {
+  if (innerTag[innerTag.length - 1] === '/') {
     node = getNode(innerTag.substring(0, innerTag.length - 1));
     capture = false;
     props.nodes.push(node);
-    reset(props);
+    resetCapture(props);
   } else {
     node = getNode(innerTag);
   }
@@ -66,16 +131,16 @@ function captureNode(props) {
   if (isSelfClosingTag(node.tagName)) {
     capture = false;
     props.nodes.push(node);
-    reset(props);
+    resetCapture(props);
   }
 
   while (props.index < props.length && capture) {
-    if (isOpenAndClosed(props.string, props.index)) {
+    if (isOpenAndClosed(props)) {
       props.open += 1;
       props.closed += 1;
-    } else if (isOpenTag(props.string, props.index)) {
+    } else if (isOpenTag(props)) {
       props.open += 1;
-    } if (isClosedTag(props.string, props.index)) {
+    } if (isClosedTag(props)) {
       props.closed += 1;
     }
 
@@ -88,7 +153,7 @@ function captureNode(props) {
         props.index += 1;
       }
 
-      reset(props);
+      resetCapture(props);
       capture = false;
     }
 
@@ -117,7 +182,12 @@ function captureText(props) {
     props.nodes.push(temp);
   }
 
-  reset(props);
+  resetCapture(props);
+}
+function filterAttributeName(name) {
+  return name === 'class'
+    ? 'className'
+    : name;
 }
 function getNode(str) {
   var getAttrName = false;
@@ -143,6 +213,8 @@ function getNode(str) {
     i++;
   }
 
+  node.tagName === node.tagName.toLowerCase();
+
   for (; i < n; i++) {
     if (isSpace(str[i])) {
       getAttrName = true;
@@ -156,7 +228,7 @@ function getNode(str) {
       i++;
     } else if (getAttrValue && str[i] === stringChar) {
       getAttrValue = false;
-      node.attributes[attr.name === 'class' ? 'className' : attr.name] = attr.value;
+      node.attributes[filterAttributeName(attr.name)] = attr.value;
       attr.name = '';
       attr.value = '';
     } else if (getAttrName) {
@@ -168,31 +240,36 @@ function getNode(str) {
 
   return node;
 }
-function parse(str) {
+function parse(string) {
   var props = {
     content : '',
-    string : str,
+    string : string,
     index : 0,
     anchor : 0,
     open : 0,
     closed : 0,
-    length : str.length,
+    length : string.length,
     nodes : []
   };
 
+
   for (; props.index < props.length; props.index++) {
     if (!isSpace(props.string[props.index])) {
-      if (isOpenTag(props.string, props.index)) {
+      if (isOpenTag(props)) {
         captureNode(props);
-      } else if (isText(props.string, props.index)) {
+      } else if (isText(props)) {
         captureText(props);
+      } else if (isComment(props)) {
+        captureComment(props);
+      } else if (isDocType(props)) {
+        captureDocType(props);
       }
     }
   }
 
   return props.nodes;
 }
-function reset(props) {
+function resetCapture(props) {
   props.open = 0;
   props.closed = 0;
   props.anchor = props.index;
