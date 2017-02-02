@@ -16,5 +16,5 @@ function captureText(props) {
     props.nodes.push(temp);
   }
 
-  reset(props);
+  resetCapture(props);
 }
