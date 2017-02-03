@@ -1,63 +1,61 @@
-function captureNode(props) {
-  var capture = true;
-  var innerTag = '';
-  var node;
+function captureNode(p) {
+  let hasSlash = false;
+  let capture = true;
+  let innerTag = '';
+  let node;
 
   // Get inner tag
-  props.open += 1;
-  props.index += 1;
+  p.open += 1;
+  p.i += 1;
 
-  while (props.string[props.index] !== '>' && props.string[props.index]) {
-    innerTag += props.string[props.index];
-    props.index += 1;
+  while (p.str[p.i] !== '>' && p.str[p.i]) {
+    innerTag += p.str[p.i];
+    p.i += 1;
   }
-
-  props.index += 1;
 
   if (innerTag[innerTag.length - 1] === '/') {
-    node = getNode(innerTag.substring(0, innerTag.length - 1));
-    capture = false;
-    props.nodes.push(node);
-    resetCapture(props);
-  } else {
-    node = getNode(innerTag);
+    innerTag = innerTag.substring(0, innerTag.length - 1);
+    hasSlash = true;
   }
 
+  p.i += 1;
+  node = getNode(innerTag);
   innerTag = '';
-
-  if (isSelfClosingTag(node.tagName)) {
+  if (hasSlash && SELF_CLOSING[node.tagName] || SELF_CLOSING[node.tagName]) {
     capture = false;
-    props.nodes.push(node);
-    resetCapture(props);
+    p.nodes.push(node);
+    resetCapture(p);
+  } else if (hasSlash) {
+    throw new Error('Tag: \'' + node.tagName + '\' is not a self closing tag.');
   }
 
-  while (props.index < props.length && capture) {
-    if (isOpenAndClosed(props)) {
-      props.open += 1;
-      props.closed += 1;
-    } else if (isOpenTag(props)) {
-      props.open += 1;
-    } if (isClosedTag(props)) {
-      props.closed += 1;
+  while (p.i < p.length && capture) {
+    if (isSelfClosingTag(p)) {
+      p.open += 1;
+      p.closed += 1;
+    } else if (isOpenTag(p)) {
+      p.open += 1;
+    } if (isClosedTag(p)) {
+      p.closed += 1;
     }
 
-    if (props.open - props.closed === 0) {
-      node.childNodes = parse(props.content);
-      props.nodes.push(node);
+    if (p.open - p.closed === 0) {
+      node.childNodes = parse(p.content);
+      p.nodes.push(node);
 
       // Go to the end of the closed tag
-      while (props.string[props.index] !== '>' && props.string[props.index]) {
-        props.index += 1;
+      while (p.str[p.i] !== '>' && p.str[p.i]) {
+        p.i += 1;
       }
 
-      resetCapture(props);
+      resetCapture(p);
       capture = false;
     }
 
-    if (props.open > props.closed) {
-      props.content += props.string[props.index];
+    if (p.open > p.closed) {
+      p.content += p.str[p.i];
     }
 
-    props.index += 1;
+    p.i += 1;
   }
 }
