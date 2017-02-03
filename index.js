@@ -1,97 +1,141 @@
 (function () {
-var SELF_CLOSING = {
-  img : true,
-  input : true,
-  hr : true,
-  br : true
+const SPACE = {
+  ' ' : true,
+  '\t' : true,
+  '\n' : true
 };
-function isClosedTag(props) {
-  const s = props.string.substring(props.index, props.index + 2);
-  return s === '</' || s === '/>';
+
+const SELF_CLOSING = {
+  br : true,
+  hr : true,
+
+  col : true,
+  img : true,
+  wbr : true,
+
+  area : true,
+  base : true,
+  link : true,
+  meta : true,
+
+  embed : true,
+  input : true,
+  param : true,
+  param : true,
+  track : true,
+
+  keygen : true,
+  source : true,
+
+  command : true,
+};
+function isClosedTag(p) {
+  const i = p.i;
+  const s = p.str.substring(i, i + 2);
+  return s === '</';
 }
-function isComment(props) {
-  return props.string.substring(props.index, props.index + 4) === '<!--';
+function isComment(p) {
+  const i = p.i;
+  const s = p.str.substring(i, i + 4);
+  return s === '<!--';
 }
-function isDocType(props) {
-  const s = props.string
-    .substring(props.index, props.index + 9)
+function isDocType(p) {
+  const i = p.i;
+  const s = p.str
+    .substring(i, i + 9)
     .toLowerCase();
   return s === '<!doctype';
 }
-function isOpenAndClosed(props) {
-  const s = props.string
-    .substring(props.index + 1, props.index + 6)
-    .toLowerCase();
-  return SELF_CLOSING[s];
-}
-function isOpenTag(props) {
+function isOpenTag(p) {
+  const i = p.i;
   return (
-    props.string[props.index] === '<' &&
-    props.string[props.index + 1] !== '/' &&
-    props.string.substring(props.index, props.index + 2) !== '<!'
+    p.str[i] === '<' &&
+    p.str[i + 1] !== '/' &&
+    p.str.substring(i, i + 2) !== '<!'
   );
 }
-function isSelfClosingTag(tagName) {
-  return SELF_CLOSING[tagName];
-}
-function isSpace(str) {
-  return str === ' ' || str === '\t' || str === '\n';
-}
-function isText(props) {
-  return props.string[props.index] !== '<';
-}
-function captureComment(props) {
-  var innerComment = '';
+function isSelfClosingTag(p) {
+  const i = p.i;
+  const str = p.str
+    .substring(i + 1, i + 8)
+    .toLowerCase();
 
-  props.index += 4;
+  return (
+        SELF_CLOSING[
+        str.substring(0, 2) ]
+    ||  SELF_CLOSING[
+        str.substring(0, 3) ]
+    ||  SELF_CLOSING[
+        str.substring(0, 4) ]
+    ||  SELF_CLOSING[
+        str.substring(0, 5) ]
+    ||  SELF_CLOSING[
+        str.substring(0, 6) ]
+    ||  SELF_CLOSING[
+        str ]
+  );
+}
+function isText(p) {
+  return p.str[p.i] !== '<';
+}
+function captureComment(p) {
+  let value = '';
 
-  while (props.string.substring(props.index, props.index + 3) !== '-->' && props.string[props.index]) {
-    innerComment += props.string[props.index];
-    props.index += 1;
+  p.i += 4;
+
+  while (
+    p.str.substring(p.i, p.i + 3) !== '-->'
+    && p.str[p.i]
+  ) {
+    value += p.str[p.i];
+    p.i += 1;
   }
 
-  props.index += 3;
+  p.i += 3;
 
-  props.nodes.push({
+  p.nodes.push({
     tagName : 'comment',
-    value : innerComment
+    value : value
   });
 
-  resetCapture(props);
+  resetCapture(p);
 }
-function captureDocType(props) {
+function captureDocType(p) {
   let inner = '';
   let identifiers = [];
   let identifiersString;
   let rootAndType;
   let strChar;
 
-  props.index += 2;
+  p.i += 2;
 
-  while (props.string.substring(props.index, props.index + 3) !== '>' && props.string[props.index]) {
-    inner += props.string[props.index];
-    props.index += 1;
+  while (
+    p.str.substring(p.i, p.i + 1) !== '>'
+    && p.str[p.i]
+  ) {
+    inner += p.str[p.i];
+    p.i += 1;
 
     if ((
-      props.string[props.index] === '"'
-      || props.string[props.index] === '\''
+      p.str[p.i] === '"'
+      || p.str[p.i] === '\''
     ) && !strChar) {
-      strChar = props.string[props.index];
+      strChar = p.str[p.i];
       identifiersString = '';
-      while (props.string[props.index + 1] !== strChar && props.string[props.index]) {
-        props.index += 1;
-        identifiersString += props.string[props.index];
+      while (p.str[p.i + 1] !== strChar && p.str[p.i]) {
+        p.i += 1;
+        identifiersString += p.str[p.i];
       }
-      props.index += 1;
+      p.i += 1;
       strChar = undefined;
       identifiers.push(identifiersString);
     }
   }
 
-  props.index += 1;
+  p.i += 1;
   rootAndType = inner.split(' ');
 
-  props.nodes.push({
+  p.nodes.push({
     tagName : 'doctype',
     rootElement : rootAndType[1],
     type : rootAndType[2] && rootAndType[2].trim().toLowerCase(),
@@ -99,90 +143,92 @@ function captureDocType(props) {
     privateIdentifier : identifiers[1]
   });
 
-  resetCapture(props);
+  resetCapture(p);
 }
-function captureNode(props) {
-  var capture = true;
-  var innerTag = '';
-  var node;
+function captureNode(p) {
+  let hasSlash = false;
+  let capture = true;
+  let innerTag = '';
+  let node;
 
   // Get inner tag
-  props.open += 1;
-  props.index += 1;
+  p.open += 1;
+  p.i += 1;
 
-  while (props.string[props.index] !== '>' && props.string[props.index]) {
-    innerTag += props.string[props.index];
-    props.index += 1;
+  while (p.str[p.i] !== '>' && p.str[p.i]) {
+    innerTag += p.str[p.i];
+    p.i += 1;
   }
-
-  props.index += 1;
 
   if (innerTag[innerTag.length - 1] === '/') {
-    node = getNode(innerTag.substring(0, innerTag.length - 1));
-    capture = false;
-    props.nodes.push(node);
-    resetCapture(props);
-  } else {
-    node = getNode(innerTag);
+    innerTag = innerTag.substring(0, innerTag.length - 1);
+    hasSlash = true;
   }
 
+  p.i += 1;
+  node = getNode(innerTag);
   innerTag = '';
-
-  if (isSelfClosingTag(node.tagName)) {
+  if (hasSlash && SELF_CLOSING[node.tagName] || SELF_CLOSING[node.tagName]) {
     capture = false;
-    props.nodes.push(node);
-    resetCapture(props);
+    p.nodes.push(node);
+    resetCapture(p);
+  } else if (hasSlash) {
+    throw new Error('Tag: \'' + node.tagName + '\' is not a self closing tag.');
   }
 
-  while (props.index < props.length && capture) {
-    if (isOpenAndClosed(props)) {
-      props.open += 1;
-      props.closed += 1;
-    } else if (isOpenTag(props)) {
-      props.open += 1;
-    } if (isClosedTag(props)) {
-      props.closed += 1;
+  while (p.i < p.length && capture) {
+    if (isSelfClosingTag(p)) {
+      p.open += 1;
+      p.closed += 1;
+    } else if (isOpenTag(p)) {
+      p.open += 1;
+    } if (isClosedTag(p)) {
+      p.closed += 1;
     }
 
-    if (props.open - props.closed === 0) {
-      node.childNodes = parse(props.content);
-      props.nodes.push(node);
+    if (p.open - p.closed === 0) {
+      node.childNodes = parse(p.content);
+      p.nodes.push(node);
 
       // Go to the end of the closed tag
-      while (props.string[props.index] !== '>' && props.string[props.index]) {
-        props.index += 1;
+      while (p.str[p.i] !== '>' && p.str[p.i]) {
+        p.i += 1;
       }
 
-      resetCapture(props);
+      resetCapture(p);
       capture = false;
     }
 
-    if (props.open > props.closed) {
-      props.content += props.string[props.index];
+    if (p.open > p.closed) {
+      p.content += p.str[p.i];
     }
 
-    props.index += 1;
+    p.i += 1;
   }
 }
-function captureText(props) {
-  var temp;
+function captureText(p) {
+  let temp;
 
-  while (props.string[props.index] !== '<' && props.index < props.length) {
-    props.index += 1;
+  while (p.str[p.i] !== '<' && p.i < p.length) {
+    p.i += 1;
   }
 
-  props.index -= 1;
+  p.i -= 1;
 
-  temp = props.string.substring(
-    props.anchor,
-    props.index + 1
+  temp = p.str.substring(
+    p.anchor,
+    p.i + 1
   );
 
-  if (temp.trim()) {
-    props.nodes.push(temp);
+  if (temp[0] === '\n') {
+    temp = temp.substring(1, temp.length);
   }
 
-  resetCapture(props);
+  if (temp.trim()) {
+    p.nodes.push(temp.trimRight());
+  }
+
+  resetCapture(p);
 }
 function filterAttributeName(name) {
   return name === 'class'
@@ -190,90 +236,97 @@ function filterAttributeName(name) {
     : name;
 }
 function getNode(str) {
-  var getAttrName = false;
-  var getAttrValue = false;
-  var stringChar;
+  let stringChar;
 
-  var i = 0;
-  var n = str.length;
+  let i = 0;
+  let n = str.length;
 
-  var node = {
+  let node = {
     tagName : '',
     attributes : {},
     childNodes : []
   };
 
-  var attr = {
+  let attr = {
     name : '',
     value : ''
   };
 
-  while (!isSpace(str[i]) && str[i]) {
+  while (!SPACE[str[i]] && str[i]) {
     node.tagName += str[i];
-    i++;
+    i += 1;
   }
 
-  node.tagName === node.tagName.toLowerCase();
+  node.tagName = node.tagName.toLowerCase();
 
   for (; i < n; i++) {
-    if (isSpace(str[i])) {
-      getAttrName = true;
-      i++;
+    while (SPACE[str[i]] && str[i]) {
+      i += 1;
+    }
+
+    while (str[i] !== '=' && str[i]) {
+      attr.name += str[i];
+      i += 1;
     }
 
     if (str[i] === '=') {
-      getAttrName = false;
-      getAttrValue = true;
-      stringChar = str[i + 1];
-      i++;
-    } else if (getAttrValue && str[i] === stringChar) {
-      getAttrValue = false;
+      while (
+        (str[i] !== '\'' && str[i] !== '\"')
+        && str[i]
+      ) {
+        i += 1;
+      }
+
+      stringChar = str[i];
+      i += 1;
+
+      while (str[i] !== stringChar && str[i]) {
+        attr.value += str[i];
+        i += 1;
+      }
+
+      i += 1;
       node.attributes[filterAttributeName(attr.name)] = attr.value;
       attr.name = '';
       attr.value = '';
-    } else if (getAttrName) {
-      attr.name = attr.name += str[i];
-    } else if (getAttrValue) {
-      attr.value = attr.value += str[i];
     }
   }
 
   return node;
 }
-function parse(string) {
-  var props = {
+function parse(str) {
+  let p = {
     content : '',
-    string : string,
-    index : 0,
+    str : str,
+    i : 0,
     anchor : 0,
     open : 0,
     closed : 0,
-    length : string.length,
+    length : str.length,
     nodes : []
   };
 
-
-  for (; props.index < props.length; props.index++) {
-    if (!isSpace(props.string[props.index])) {
-      if (isOpenTag(props)) {
-        captureNode(props);
-      } else if (isText(props)) {
-        captureText(props);
-      } else if (isComment(props)) {
-        captureComment(props);
-      } else if (isDocType(props)) {
-        captureDocType(props);
+  for (; p.i < p.length; p.i++) {
+    if (!SPACE[p.str[p.i]]) {
+      if (isOpenTag(p)) {
+        captureNode(p);
+      } else if (isText(p)) {
+        captureText(p);
+      } else if (isComment(p)) {
+        captureComment(p);
+      } else if (isDocType(p)) {
+        captureDocType(p);
       }
     }
   }
 
-  return props.nodes;
+  return p.nodes;
 }
-function resetCapture(props) {
-  props.open = 0;
-  props.closed = 0;
-  props.anchor = props.index;
-  props.content = '';
+function resetCapture(p) {
+  p.open = 0;
+  p.closed = 0;
+  p.anchor = p.i;
+  p.content = '';
 }
 if (typeof module === 'object') {
   module.exports = parse;
