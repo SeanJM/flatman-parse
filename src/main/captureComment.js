@@ -1,19 +1,22 @@
-function captureComment(props) {
-  var innerComment = '';
+function captureComment(p) {
+  let value = '';
 
-  props.index += 4;
+  p.i += 4;
 
-  while (props.string.substring(props.index, props.index + 3) !== '-->' && props.string[props.index]) {
-    innerComment += props.string[props.index];
-    props.index += 1;
+  while (
+    p.str.substring(p.i, p.i + 3) !== '-->'
+    && p.str[p.i]
+  ) {
+    value += p.str[p.i];
+    p.i += 1;
   }
 
-  props.index += 3;
+  p.i += 3;
 
-  props.nodes.push({
+  p.nodes.push({
     tagName : 'comment',
-    value : innerComment
+    value : value
   });
 
-  resetCapture(props);
+  resetCapture(p);
 }

@@ -1,6 +1,7 @@
-function isDocType(props) {
-  const s = props.string
-    .substring(props.index, props.index + 9)
+function isDocType(p) {
+  const i = p.i;
+  const s = p.str
+    .substring(i, i + 9)
     .toLowerCase();
   return s === '<!doctype';
 }

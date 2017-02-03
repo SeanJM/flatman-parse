@@ -1,6 +1,6 @@
-function resetCapture(props) {
-  props.open = 0;
-  props.closed = 0;
-  props.anchor = props.index;
-  props.content = '';
+function resetCapture(p) {
+  p.open = 0;
+  p.closed = 0;
+  p.anchor = p.i;
+  p.content = '';
 }

@@ -1,29 +1,28 @@
-function parse(string) {
-  var props = {
+function parse(str) {
+  let p = {
     content : '',
-    string : string,
-    index : 0,
+    str : str,
+    i : 0,
     anchor : 0,
     open : 0,
     closed : 0,
-    length : string.length,
+    length : str.length,
     nodes : []
   };
 
-
-  for (; props.index < props.length; props.index++) {
-    if (!isSpace(props.string[props.index])) {
-      if (isOpenTag(props)) {
-        captureNode(props);
-      } else if (isText(props)) {
-        captureText(props);
-      } else if (isComment(props)) {
-        captureComment(props);
-      } else if (isDocType(props)) {
-        captureDocType(props);
+  for (; p.i < p.length; p.i++) {
+    if (!SPACE[p.str[p.i]]) {
+      if (isOpenTag(p)) {
+        captureNode(p);
+      } else if (isText(p)) {
+        captureText(p);
+      } else if (isComment(p)) {
+        captureComment(p);
+      } else if (isDocType(p)) {
+        captureDocType(p);
       }
     }
   }
 
-  return props.nodes;
+  return p.nodes;
 }

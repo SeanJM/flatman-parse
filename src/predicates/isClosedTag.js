@@ -1,4 +1,5 @@
-function isClosedTag(props) {
-  const s = props.string.substring(props.index, props.index + 2);
-  return s === '</' || s === '/>';
+function isClosedTag(p) {
+  const i = p.i;
+  const s = p.str.substring(i, i + 2);
+  return s === '</';
 }

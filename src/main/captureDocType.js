@@ -1,36 +1,39 @@
-function captureDocType(props) {
+function captureDocType(p) {
   let inner = '';
   let identifiers = [];
   let identifiersString;
   let rootAndType;
   let strChar;
 
-  props.index += 2;
+  p.i += 2;
 
-  while (props.string.substring(props.index, props.index + 3) !== '>' && props.string[props.index]) {
-    inner += props.string[props.index];
-    props.index += 1;
+  while (
+    p.str.substring(p.i, p.i + 1) !== '>'
+    && p.str[p.i]
+  ) {
+    inner += p.str[p.i];
+    p.i += 1;
 
     if ((
-      props.string[props.index] === '"'
-      || props.string[props.index] === '\''
+      p.str[p.i] === '"'
+      || p.str[p.i] === '\''
     ) && !strChar) {
-      strChar = props.string[props.index];
+      strChar = p.str[p.i];
       identifiersString = '';
-      while (props.string[props.index + 1] !== strChar && props.string[props.index]) {
-        props.index += 1;
-        identifiersString += props.string[props.index];
+      while (p.str[p.i + 1] !== strChar && p.str[p.i]) {
+        p.i += 1;
+        identifiersString += p.str[p.i];
       }
-      props.index += 1;
+      p.i += 1;
       strChar = undefined;
       identifiers.push(identifiersString);
     }
   }
 
-  props.index += 1;
+  p.i += 1;
   rootAndType = inner.split(' ');
 
-  props.nodes.push({
+  p.nodes.push({
     tagName : 'doctype',
     rootElement : rootAndType[1],
     type : rootAndType[2] && rootAndType[2].trim().toLowerCase(),
@@ -38,5 +41,5 @@ function captureDocType(props) {
     privateIdentifier : identifiers[1]
   });
 
-  resetCapture(props);
+  resetCapture(p);
 }
