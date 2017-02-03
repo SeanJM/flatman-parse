@@ -1,49 +1,57 @@
 function getNode(str) {
-  var getAttrName = false;
-  var getAttrValue = false;
-  var stringChar;
+  let stringChar;
 
-  var i = 0;
-  var n = str.length;
+  let i = 0;
+  let n = str.length;
 
-  var node = {
+  let node = {
     tagName : '',
     attributes : {},
     childNodes : []
   };
 
-  var attr = {
+  let attr = {
     name : '',
     value : ''
   };
 
-  while (!isSpace(str[i]) && str[i]) {
+  while (!SPACE[str[i]] && str[i]) {
     node.tagName += str[i];
-    i++;
+    i += 1;
   }
 
-  node.tagName === node.tagName.toLowerCase();
+  node.tagName = node.tagName.toLowerCase();
 
   for (; i < n; i++) {
-    if (isSpace(str[i])) {
-      getAttrName = true;
-      i++;
+    while (SPACE[str[i]] && str[i]) {
+      i += 1;
+    }
+
+    while (str[i] !== '=' && str[i]) {
+      attr.name += str[i];
+      i += 1;
     }
 
     if (str[i] === '=') {
-      getAttrName = false;
-      getAttrValue = true;
-      stringChar = str[i + 1];
-      i++;
-    } else if (getAttrValue && str[i] === stringChar) {
-      getAttrValue = false;
+      while (
+        (str[i] !== '\'' && str[i] !== '\"')
+        && str[i]
+      ) {
+        i += 1;
+      }
+
+      stringChar = str[i];
+      i += 1;
+
+      while (str[i] !== stringChar && str[i]) {
+        attr.value += str[i];
+        i += 1;
+      }
+
+      i += 1;
       node.attributes[filterAttributeName(attr.name)] = attr.value;
       attr.name = '';
       attr.value = '';
-    } else if (getAttrName) {
-      attr.name = attr.name += str[i];
-    } else if (getAttrValue) {
-      attr.value = attr.value += str[i];
     }
   }
 
