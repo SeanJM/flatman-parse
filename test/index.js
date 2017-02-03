@@ -14,6 +14,8 @@ module.exports = tinyTest(function (test, load) {
     } else if (props.isDeepEqual) {
       t.this(props.this);
       t.isDeepEqual(props.isDeepEqual);
+    } else if (props.isFailure) {
+      t.isFailure(props.isFailure);
     }
   });
 

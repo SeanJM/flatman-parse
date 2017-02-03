@@ -1,16 +1,19 @@
 const parse = require('../../index.js');
 
 module.exports = {
-  name : 'Self closing',
+  name : 'link',
   this : function () {
     return parse(`
-<input/>
+<link rel="stylesheet" href="/lib/w3.css">
     `);
   },
   isDeepEqual : function () {
     return [{
-      tagName : 'input',
-      attributes : {},
+      tagName : 'link',
+      attributes : {
+        rel : 'stylesheet',
+        href : '/lib/w3.css'
+      },
       childNodes : []
     }];
   }
