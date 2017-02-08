@@ -1,44 +1,67 @@
 function captureDocType(p) {
-  let inner = '';
-  let identifiers = [];
-  let identifiersString;
-  let rootAndType;
-  let strChar;
+  const str = p.str;
+  let i = p.i;
 
-  p.i += 2;
+  let rootElement = '';
+  let type = '';
+  let publicIdentifier = '';
+  let privateIdentifier = '';
+  let stringChar;
 
-  while (
-    p.str.substring(p.i, p.i + 1) !== '>'
-    && p.str[p.i]
-  ) {
-    inner += p.str[p.i];
-    p.i += 1;
+  i += 10; // Offset doctype
 
-    if ((
-      p.str[p.i] === '"'
-      || p.str[p.i] === '\''
-    ) && !strChar) {
-      strChar = p.str[p.i];
-      identifiersString = '';
-      while (p.str[p.i + 1] !== strChar && p.str[p.i]) {
-        p.i += 1;
-        identifiersString += p.str[p.i];
-      }
-      p.i += 1;
-      strChar = undefined;
-      identifiers.push(identifiersString);
+  while (!SPACE[str[i]] && str[i] !== '>' && str[i]) {
+    rootElement += str[i];
+    i += 1;
+  }
+
+  while (SPACE[str[i]] && str[i]) {
+    i += 1;
+  }
+
+  while (!SPACE[str[i]] && str[i] !== '>' && str[i]) {
+    type += str[i];
+    i += 1;
+  }
+
+  if (str[i] !== '>') {
+    while (str[i] !== '\'' && str[i] !== '\"' && str[i]) {
+      i += 1;
+    }
+
+    stringChar = str[i];
+    i += 1;
+
+    while (str[i] !== stringChar && str[i]) {
+      publicIdentifier += str[i];
+      i += 1;
+    }
+    i += 1;
+
+    while (str[i] !== '\'' && str[i] !== '\"' && str[i]) {
+      i += 1;
+    }
+
+    stringChar = str[i];
+    i += 1;
+
+    while (str[i] !== stringChar && str[i]) {
+      privateIdentifier += str[i];
+      i += 1;
+    }
+
+    while (str[i] !== '>' && str[i]) {
+      i += 1;
     }
   }
 
-  p.i += 1;
-  rootAndType = inner.split(' ');
-
+  p.i = i;
   p.nodes.push({
     tagName : 'doctype',
-    rootElement : rootAndType[1],
-    type : rootAndType[2] && rootAndType[2].trim().toLowerCase(),
-    publicIdentifier : identifiers[0],
-    privateIdentifier : identifiers[1]
+    rootElement : rootElement,
+    type : type.length ? type.toLowerCase() : undefined,
+    publicIdentifier : publicIdentifier.length ? publicIdentifier : undefined,
+    privateIdentifier : privateIdentifier.length ? privateIdentifier : undefined
   });
 
   resetCapture(p);
