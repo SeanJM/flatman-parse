@@ -1,7 +1,7 @@
 const parse = require('../../index.js');
 
 module.exports = {
-  name : 'nested input with sibling',
+  name : 'div > input + div',
   this : function () {
     return parse(`
 <div>

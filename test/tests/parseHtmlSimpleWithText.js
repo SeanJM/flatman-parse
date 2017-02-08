@@ -1,7 +1,7 @@
 const parse = require('../../index.js');
 
 module.exports = {
-  name : 'With one text node',
+  name : 'div.test > [string]',
   this : function () {
     return parse(`
 <div class="test">   a text string</div>

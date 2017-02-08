@@ -1,7 +1,7 @@
 const parse = require('../../index.js');
 
 module.exports = {
-  name : '2 Children with 2 children',
+  name : '(div > div + div) * 2',
   this : function () {
     return parse(`
 <div class="parent">

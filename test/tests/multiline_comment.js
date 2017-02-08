@@ -1,7 +1,7 @@
 const parse = require('../../index.js');
 
 module.exports = {
-  name : 'Comment multiline',
+  name : 'comment (multiline)',
   this : function () {
     return parse(`
 <!--

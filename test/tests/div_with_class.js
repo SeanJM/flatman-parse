@@ -1,18 +1,17 @@
 const parse = require('../../index.js');
 
 module.exports = {
-  name : 'meta',
+  name : 'div.test',
   this : function () {
     return parse(`
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<div class="test"></div>
     `);
   },
   isDeepEqual : function () {
     return [{
-      tagName : 'meta',
+      tagName : 'div',
       attributes : {
-        name : 'viewport',
-        content : 'width=device-width, initial-scale=1'
+        className : 'test'
       },
       childNodes : []
     }];

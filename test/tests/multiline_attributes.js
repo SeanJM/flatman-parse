@@ -1,7 +1,7 @@
 const parse = require('../../index.js');
 
 module.exports = {
-  name : 'Multiline attributes',
+  name : 'attributes (multiline)',
   this : function () {
     const str = `
 <span

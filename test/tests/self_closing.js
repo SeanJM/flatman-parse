@@ -1,7 +1,7 @@
 const parse = require('../../index.js');
 
 module.exports = {
-  name : 'Self closing',
+  name : '<input/>',
   this : function () {
     return parse(`
 <input/>

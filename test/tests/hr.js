@@ -1,13 +1,12 @@
 const parse = require('../../index.js');
 
 module.exports = {
-  name : 'horizontal rule',
+  name : 'hr',
   this : function () {
-    return parse(
-`
+    const str = `
 <div><hr></div>
-`
-    );
+`;
+    return parse(str);
   },
   isDeepEqual : function () {
     return [{

@@ -1,7 +1,7 @@
 const parse = require('../../index.js');
 
 module.exports = {
-  name : 'input with optional slash',
+  name : 'input (optional slash)',
   this : function () {
     return parse(
 `

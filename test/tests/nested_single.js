@@ -1,7 +1,7 @@
 const parse = require('../../index.js');
 
 module.exports = {
-  name : '1 node with 1 child',
+  name : 'div > div',
   this : function () {
     return parse(`
 <div class="parent">
