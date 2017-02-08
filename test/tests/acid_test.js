@@ -1,4 +1,8 @@
+const fs = require('fs');
+const path = require('path');
 const parse = require('../../index.js');
+const jquery = fs.readFileSync(path.resolve('test/jquery-3.1.1.min.js'), 'utf8');
+const bootstrap = fs.readFileSync(path.resolve('test/bootstrap.min.css'), 'utf8');
 
 module.exports = {
   name : 'The Acid Test',
@@ -14,6 +18,7 @@ module.exports = {
     <meta name="Description" content="Well organized and easy to understand Web building tutorials with lots of examples of how to use HTML, CSS, JavaScript, SQL, PHP, and XML.">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/lib/w3.css">
+    <style>${bootstrap}</style>
   </head>
   <body>
     <div class="titlebar"></div>
@@ -28,6 +33,7 @@ module.exports = {
         data-test="test"
       ></span>
     </div>
+    <script>${jquery}</script>
   </body>
 </HTML>
 `;
@@ -92,6 +98,10 @@ module.exports = {
             href : '/lib/w3.css'
           },
           childNodes : []
+        }, {
+          tagName : 'style',
+          attributes : {},
+          childNodes : [bootstrap]
         }]
       }, {
         tagName : 'body',
@@ -132,6 +142,10 @@ module.exports = {
             },
             childNodes : []
           }]
+        }, {
+          tagName : 'script',
+          attributes : {},
+          childNodes : [jquery]
         }]
       }]
     }];
