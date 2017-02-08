@@ -31,8 +31,7 @@ const SELF_CLOSING = {
 };
 function isClosedTag(p) {
   const i = p.i;
-  const s = p.str.substring(i, i + 2);
-  return s === '</';
+  return p.str[i] + p.str[i + 1] === '</';
 }
 function isComment(p) {
   const i = p.i;
@@ -75,6 +74,10 @@ function isSelfClosingTag(p) {
         str ]
   );
 }
+function isStringQuote(p) {
+  const str = p.str[p.i];
+  return str === '\'' || str === '"' || str === '`';
+}
 function isText(p) {
   return p.str[p.i] !== '<';
 }
@@ -101,55 +104,135 @@ function captureComment(p) {
   resetCapture(p);
 }
 function captureDocType(p) {
-  let inner = '';
-  let identifiers = [];
-  let identifiersString;
-  let rootAndType;
-  let strChar;
+  const str = p.str;
+  let i = p.i;
 
-  p.i += 2;
+  let rootElement = '';
+  let type = '';
+  let publicIdentifier = '';
+  let privateIdentifier = '';
+  let stringChar;
 
-  while (
-    p.str.substring(p.i, p.i + 1) !== '>'
-    && p.str[p.i]
-  ) {
-    inner += p.str[p.i];
-    p.i += 1;
+  i += 10; // Offset doctype
 
-    if ((
-      p.str[p.i] === '"'
-      || p.str[p.i] === '\''
-    ) && !strChar) {
-      strChar = p.str[p.i];
-      identifiersString = '';
-      while (p.str[p.i + 1] !== strChar && p.str[p.i]) {
-        p.i += 1;
-        identifiersString += p.str[p.i];
-      }
-      p.i += 1;
-      strChar = undefined;
-      identifiers.push(identifiersString);
+  while (!SPACE[str[i]] && str[i] !== '>' && str[i]) {
+    rootElement += str[i];
+    i += 1;
+  }
+
+  while (SPACE[str[i]] && str[i]) {
+    i += 1;
+  }
+
+  while (!SPACE[str[i]] && str[i] !== '>' && str[i]) {
+    type += str[i];
+    i += 1;
+  }
+
+  if (str[i] !== '>') {
+    while (str[i] !== '\'' && str[i] !== '\"' && str[i]) {
+      i += 1;
+    }
+
+    stringChar = str[i];
+    i += 1;
+
+    while (str[i] !== stringChar && str[i]) {
+      publicIdentifier += str[i];
+      i += 1;
+    }
+    i += 1;
+
+    while (str[i] !== '\'' && str[i] !== '\"' && str[i]) {
+      i += 1;
+    }
+
+    stringChar = str[i];
+    i += 1;
+
+    while (str[i] !== stringChar && str[i]) {
+      privateIdentifier += str[i];
+      i += 1;
+    }
+
+    while (str[i] !== '>' && str[i]) {
+      i += 1;
     }
   }
 
-  p.i += 1;
-  rootAndType = inner.split(' ');
-
+  p.i = i;
   p.nodes.push({
     tagName : 'doctype',
-    rootElement : rootAndType[1],
-    type : rootAndType[2] && rootAndType[2].trim().toLowerCase(),
-    publicIdentifier : identifiers[0],
-    privateIdentifier : identifiers[1]
+    rootElement : rootElement,
+    type : type.length ? type.toLowerCase() : undefined,
+    publicIdentifier : publicIdentifier.length ? publicIdentifier : undefined,
+    privateIdentifier : privateIdentifier.length ? privateIdentifier : undefined
   });
 
   resetCapture(p);
+}
+function captureExecutable(p) {
+  let stringChar;
+  let content = '';
+  let capture = true;
+
+  while (p.i < p.length && capture) {
+    content += p.str[p.i];
+
+    // Capture strings
+    if (isStringQuote(p) && !stringChar) {
+      stringChar = p.str[p.i];
+      p.i += 1;
+
+      while (p.str[p.i] !== stringChar && p.str[p.i]) {
+        content += p.str[p.i];
+        p.i += 1;
+      }
+
+      content += p.str[p.i];
+      stringChar = undefined;
+    }
+
+    // Capture single line comment
+    if (p.str[p.i] + p.str[p.i + 1] === '//') {
+      p.i += 1;
+      while (p.str[p.i] !== '\n' && p.str[p.i]) {
+        content += p.str[p.i];
+        p.i += 1;
+      }
+      content += p.str[p.i];
+    }
+
+    // Capture single block comment
+    if (p.str[p.i] + p.str[p.i + 1] === '/*') {
+      p.i += 1;
+      while ((p.str[p.i] + p.str[p.i + 1] !== '*/') && p.str[p.i]) {
+        content += p.str[p.i];
+        p.i += 1;
+      }
+      content += p.str[p.i];
+    }
+
+    if (isClosedTag(p)) {
+      // Trim the tag brace
+      content = content.substring(0, content.length - 1);
+      while (p.str[p.i] !== '>' && p.str[p.i]) {
+        p.i += 1;
+      }
+      capture = false;
+    }
+
+    p.i += 1;
+  }
+
+  return content;
 }
 function captureNode(p) {
   let hasSlash = false;
   let capture = true;
   let innerTag = '';
   let node;
+  let stringChar;
 
   // Get inner tag
   p.open += 1;
@@ -176,7 +259,27 @@ function captureNode(p) {
     throw new Error('Tag: \'' + node.tagName + '\' is not a self closing tag.');
   }
 
+  if (node.tagName === 'script' || node.tagName === 'style') {
+    node.childNodes.push(captureExecutable(p));
+    p.nodes.push(node);
+    capture = false;
+  }
+
   while (p.i < p.length && capture) {
+    // Capture strings
+    // if (isStringQuote(p) && !stringChar) {
+    //   stringChar = p.str[p.i];
+    //   p.i += 1;
+
+    //   while (p.str[p.i] !== stringChar && p.str[p.i]) {
+    //     p.content += p.str[p.i];
+    //     p.i += 1;
+    //   }
+
+    //   p.content += p.str[p.i];
+    //   stringChar = undefined;
+    // }
+
     if (isSelfClosingTag(p)) {
       p.open += 1;
       p.closed += 1;
