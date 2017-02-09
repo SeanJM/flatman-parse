@@ -1,4 +1,4 @@
-# Flatman Parse 1.0.0
+# Flatman Parse 1.0.1
 #### License: [MIT](https://opensource.org/licenses/MIT)
 
 #### ✅ [All 29 tests pass](#tests)
