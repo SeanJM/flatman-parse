@@ -30,6 +30,22 @@ function captureNode(p) {
   }
 
   while (p.i < p.length && capture) {
+    if (isStringQuote(p)) {
+      captureString(p);
+    }
+
+    if (isLineComment(p)) {
+      captureLineComment(p);
+    }
+
+    if (isBlockComment(p)) {
+      captureBlockComment(p);
+    }
+
+    if (isRegExp(p)) {
+      captureRegExp(p);
+    }
+
     if (isSelfClosingTag(p)) {
       p.open += 1;
       p.closed += 1;
