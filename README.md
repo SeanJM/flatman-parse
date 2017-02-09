@@ -1,7 +1,7 @@
 # Flatman Parse 1.0.0
 #### License: [MIT](https://opensource.org/licenses/MIT)
 
-#### ✅ All 29 tests pass
+#### ✅ [All 29 tests pass](#tests)
 ##  Description
 
 
@@ -50,8 +50,6 @@ const result = parseHtml("<div class="my-div"></div>");
 ```javascript
 var result = parseHtml("<div class="my-div"></div>");
 ```
-
-- [Tests](#tests)
 
 ***
 

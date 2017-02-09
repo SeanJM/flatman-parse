@@ -34,16 +34,14 @@ function generate(testResults, callback) {
 
 
   text.push('# ' + smartCase(pkg.name) + ' ' + pkg.version);
-
   text.push('#### License: ' + linkLicense(pkg.license || 'MIT'));
-
   text.push('');
 
   if (hasTests) {
     if (passed.length === total) {
-      text.push('#### ✅ All ' + total + ' tests pass');
+      text.push('#### ✅ [All ' + total + ' tests pass](#tests)');
     } else {
-      text.push('#### 🚫 ' + passed.length + ' of ' + total + ' tests passed (' + Math.round((passed.length / total) * 100) + '%)');
+      text.push('#### 🚫 [' + passed.length + ' of ' + total + ' tests passed (' + Math.round((passed.length / total) * 100) + '%)](#tests)');
     }
   } else {
     text.push('#### 🐛 No unit tests');
@@ -54,12 +52,6 @@ function generate(testResults, callback) {
     text.push('');
     text.push(a.content);
   });
-
-  text.push('');
-
-  if (hasTests) {
-    text.push('- [Tests](#tests)');
-  }
 
   text.push('');
 
