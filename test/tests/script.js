@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const parse = require('../../index.js');
+const parse = require('../../flatman-parse.js');
 
 const scripts = [
   fs.readFileSync(path.resolve('test/test.js'), 'utf8'),

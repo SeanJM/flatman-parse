@@ -1,4 +1,4 @@
-const parse = require('../../index.js');
+const parse = require('../../flatman-parse.js');
 const path = require('path');
 const fs = require('fs');
 const style = fs.readFileSync(path.resolve('test/bootstrap.min.css'), 'utf8');

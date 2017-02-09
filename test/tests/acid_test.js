@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const parse = require('../../index.js');
+const parse = require('../../flatman-parse.js');
 const jquery = fs.readFileSync(path.resolve('test/jquery-3.1.1.min.js'), 'utf8');
 const bootstrap = fs.readFileSync(path.resolve('test/bootstrap.min.css'), 'utf8');
 const loremIpsum = fs.readFileSync(path.resolve('test/lorem-ipsum.txt'), 'utf8');

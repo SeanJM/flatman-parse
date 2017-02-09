@@ -1,4 +1,4 @@
-const parse = require('../../index.js');
+const parse = require('../../flatman-parse.js');
 const fs = require('fs');
 const path = require('path');
 const scripts = [

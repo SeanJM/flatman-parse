@@ -1,4 +1,4 @@
-const parse = require('../../index.js');
+const parse = require('../../flatman-parse.js');
 
 module.exports = {
   name : '(div > div + div) * 2',
