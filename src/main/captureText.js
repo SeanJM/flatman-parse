@@ -1,8 +1,29 @@
 function captureText(p) {
+  let capture = true;
   let temp;
 
-  while (p.str[p.i] !== '<' && p.i < p.length) {
-    p.i += 1;
+  while (p.i < p.length && capture) {
+    if (isStringQuote(p)) {
+      captureString(p);
+    }
+
+    if (isLineComment(p)) {
+      captureLineComment(p);
+    }
+
+    if (isBlockComment(p)) {
+      captureBlockComment(p);
+    }
+
+    if (isRegExp(p)) {
+      captureRegExp(p);
+    }
+
+    if (isOpenTag(p) || isClosedTag(p)) {
+      capture = false;
+    } else {
+      p.i += 1;
+    }
   }
 
   p.i -= 1;
@@ -12,12 +33,8 @@ function captureText(p) {
     p.i + 1
   );
 
-  if (temp[0] === '\n') {
-    temp = temp.substring(1, temp.length);
-  }
-
   if (temp.trim()) {
-    p.nodes.push(temp.trimRight());
+    p.nodes.push(temp);
   }
 
   resetCapture(p);
