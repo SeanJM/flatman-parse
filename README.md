@@ -2,76 +2,57 @@
 #### License: [MIT](https://opensource.org/licenses/MIT)
 
 #### ✅ All 29 tests pass
-
-## Table of Contents
-
-#### Overview
+##  Description
 
 
-- Description.html
-  - [Description.html](#--description-h-top)
+## An HTML parser
+Takes your raw HTML and returns a JavaScript array with a structure similar to this:
 
-- Installation.html
-  - [Installation.html](#--installation-h-top)
+```html
+<div class="titlebar"></div>
+```
 
-- Usage.html
-  - [Usage.html](#--usage-h-top)
+```javascript
+[{
+  tagName : 'div',
+  attributes : {
+    className : 'titlebar'
+  },
+  childNodes : []
+}]
+```
+##  Installation
+
+
+### NPM
+```bash
+npm i -S flatman-parse
+```
+
+```javascript
+const parseHtml = require('flatman-parse');
+```
+
+### Download the `flatman-parse.js` and use on the client
+```html
+<script src="flatman-parse.js"></script>
+```
+##  Usage
+
+
+### On the server
+```javascript
+const parseHtml = require('flatman-parse');
+const result = parseHtml("<div class="my-div"></div>");
+```
+
+### On the client
+```javascript
+var result = parseHtml("<div class="my-div"></div>");
+```
+
 - [Tests](#tests)
 
-## Description.html
-### Description.html ([top](#table-of-contents))
-
-<markdown title="Description">
-  ## An HTML parser
-  Takes your raw HTML and returns a JavaScript array with a structure similar to this:
-
-  ```html
-  <div class="titlebar"></div>
-  ```
-
-  ```javascript
-  [{
-    tagName : 'div',
-    attributes : {
-      className : 'titlebar'
-    },
-    childNodes : []
-  }]
-  ```
-</markdown>
-## Installation.html
-### Installation.html ([top](#table-of-contents))
-
-<markdown title="Installation">
-  ### NPM
-  ```bash
-  npm i -S flatman-parse
-  ```
-
-  ```javascript
-  const parseHtml = require('flatman-parse');
-  ```
-
-  ### Download the `flatman-parse.js` and use on the client
-  ```html
-  <script src="flatman-parse.js"></script>
-  ```
-</markdown>
-## Usage.html
-### Usage.html ([top](#table-of-contents))
-
-<markdown title="Usage">
-  ### On the server
-  ```javascript
-  const parseHtml = require('flatman-parse');
-  const result = parseHtml("<div class="my-div"></div>");
-  ```
-
-  ### On the client
-  ```javascript
-  var result = parseHtml("<div class="my-div"></div>");
-  ```
-</markdown>
 ***
 
 ## Tests

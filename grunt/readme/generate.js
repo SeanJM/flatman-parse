@@ -1,6 +1,5 @@
 const path = require('path');
 const fs = require('fs');
-const _ = require('lodash');
 const m = require('match-file-utility');
 
 const pkg = JSON.parse(fs.readFileSync('package.json'));
@@ -8,34 +7,29 @@ const pkg = JSON.parse(fs.readFileSync('package.json'));
 const linkLicense = require('./linkLicense');
 const smartCase = require(path.resolve('grunt/lib/smartCase'));
 const printTests = require('./printTests');
-const printTableOfContents = require('./printTableOfContents');
-const printContents = require('./printContents');
 const config = JSON.parse(fs.readFileSync('grunt.json'));
 
 const source = path.join(config.src, 'readme');
 
+function formatContent(filename) {
+  const str = fs.readFileSync(filename, 'utf8');
+  return {
+    title : str.match(/^#([^\n]+)\n/)[1],
+    content : str.split('\n').slice(1).join('\n')
+  };
+}
+
 function generate(testResults, callback) {
-  let content = {};
+  let content = [];
   let text = [];
   var hasTests = testResults && testResults.tests.length > 0;
   var total = testResults && testResults.tests.length;
   var passed = testResults && testResults.tests.filter(a => a.passed);
   var failed = testResults && testResults.tests.filter(a => !a.passed);
 
-  m(source, /\.html$/)
-    .forEach(function (a) {
-      var p = a.substr(source.length).split(path.sep).filter(a => a.length);
-
-      if (p.length) {
-        if (typeof _.get(content, p) === 'undefined') {
-          _.set(content, p, []);
-        } else if (typeof _.get(content, p) === 'string') {
-          throw new Error('Invalid folder structure for "' + p.join(path.sep) + '"');
-        }
-        _.get(content, p).push(a);
-      } else {
-        content[ p[0] ] = fs.readFileSync(a, 'utf8');
-      }
+  content = m(source, /\.md$/)
+    .map(function (a) {
+      return formatContent(a);
     });
 
 
@@ -55,19 +49,19 @@ function generate(testResults, callback) {
     text.push('#### 🐛 No unit tests');
   }
 
-  text.push('', '## Table of Contents');
+  content.forEach(function (a) {
+    text.push('## ' + a.title);
+    text.push('');
+    text.push(a.content);
+  });
 
-  text.push('', '#### Overview', '');
-
-  printTableOfContents(text, content, 1);
+  text.push('');
 
   if (hasTests) {
     text.push('- [Tests](#tests)');
   }
 
   text.push('');
-
-  printContents(text, content, 1);
 
   if (hasTests) {
     printTests(text, testResults);
