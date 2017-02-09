@@ -3,9 +3,9 @@
   "src" : "src/",
   "dest" : "",
   "isBundle": true,
-  "isProduction": false,
+  "isProduction": true,
   "sourceMap": false,
   "isSite": false,
   "useClosure": true,
-  "bundle": "index.js"
+  "bundle": "flatman-parse.js"
 }
