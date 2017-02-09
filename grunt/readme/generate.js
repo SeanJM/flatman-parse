@@ -22,7 +22,7 @@ function generate(testResults, callback) {
   var passed = testResults && testResults.tests.filter(a => a.passed);
   var failed = testResults && testResults.tests.filter(a => !a.passed);
 
-  m(source, /\.md$/)
+  m(source, /\.html$/)
     .forEach(function (a) {
       var p = a.substr(source.length).split(path.sep).filter(a => a.length);
 
@@ -34,7 +34,7 @@ function generate(testResults, callback) {
         }
         _.get(content, p).push(a);
       } else {
-        content[ p[0].replace(/\.md$/, '') ] = a;
+        content[ p[0] ] = fs.readFileSync(a, 'utf8');
       }
     });
 
