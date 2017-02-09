@@ -29,6 +29,68 @@ const SELF_CLOSING = {
 
   command : true,
 };
+
+const IS_LETTER = {
+  // Lowercase
+  'a' : true,
+  'b' : true,
+  'c' : true,
+  'd' : true,
+  'e' : true,
+  'f' : true,
+  'g' : true,
+  'h' : true,
+  'i' : true,
+  'j' : true,
+  'k' : true,
+  'l' : true,
+  'm' : true,
+  'n' : true,
+  'o' : true,
+  'p' : true,
+  'q' : true,
+  'r' : true,
+  's' : true,
+  't' : true,
+  'u' : true,
+  'v' : true,
+  'w' : true,
+  'x' : true,
+  'y' : true,
+  'z' : true,
+  // Uppercase
+  'A' : true,
+  'B' : true,
+  'C' : true,
+  'D' : true,
+  'E' : true,
+  'F' : true,
+  'G' : true,
+  'H' : true,
+  'I' : true,
+  'J' : true,
+  'K' : true,
+  'L' : true,
+  'M' : true,
+  'N' : true,
+  'O' : true,
+  'P' : true,
+  'Q' : true,
+  'R' : true,
+  'S' : true,
+  'T' : true,
+  'U' : true,
+  'V' : true,
+  'W' : true,
+  'X' : true,
+  'Y' : true,
+  'Z' : true,
+};
+function isBlockComment(p) {
+  const i = p.i;
+  const str = p.str;
+  return str[i] + str[i + 1] === '/*';
+}
 function isClosedTag(p) {
   const i = p.i;
   return p.str[i] + p.str[i + 1] === '</';
@@ -45,12 +107,36 @@ function isDocType(p) {
     .toLowerCase();
   return s === '<!doctype';
 }
+function isLineComment(p) {
+  const i = p.i;
+  const str = p.str;
+  return str[i] + str[i + 1] === '//';
+}
 function isOpenTag(p) {
   const i = p.i;
+  const str = p.str;
+  const p1 = str[i + 1];
+  const p2 = str[i + 2];
   return (
-    p.str[i] === '<' &&
-    p.str[i + 1] !== '/' &&
-    p.str.substring(i, i + 2) !== '<!'
+    str[i] === '<'
+    && (IS_LETTER[p1] && IS_LETTER[p2])
+    && str.substring(i + 1, i + 10) !== 'arguments'
+  );
+}
+function isRegExp(p) {
+  const p1 = p.str[p.i];
+  const p2 = p.str[p.i + 1];
+
+  const i = p.i;
+  const str = p.str;
+
+  return (
+    p1 === '/'
+    && (
+      str[i - 1] === '('
+      || str[i - 1] === '='
+      || str[i - 1] === ' ' && str[i - 2] === '='
+    )
   );
 }
 function isSelfClosingTag(p) {
@@ -80,6 +166,29 @@ function isStringQuote(p) {
 }
 function isText(p) {
   return p.str[p.i] !== '<';
+}
+function captureBlockComment(p) {
+  let isEnd = false;
+  let init = p.i;
+  let i = p.i;
+  let str = p.str;
+
+  p.content += str[i];
+  i += 1;
+
+  for (; !isEnd && str[i]; i++) {
+    isEnd = str[i - 1] + str[i] === '*/';
+    p.content += str[i];
+  }
+
+  if (!isEnd) {
+    while (!isOpenTag(p) && !isClosedTag(p) && i > init) {
+      p.content = str.substring(init, i);
+      i -= 1;
+    }
+  }
+
+  p.i = i;
 }
 function captureComment(p) {
   let value = '';
@@ -171,68 +280,25 @@ function captureDocType(p) {
 
   resetCapture(p);
 }
-function captureExecutable(p) {
-  let stringChar;
-  let content = '';
-  let capture = true;
+function captureLineComment(p) {
+  const i = p.i;
+  const str = p.str;
 
-  while (p.i < p.length && capture) {
-    content += p.str[p.i];
+  p.content += str[i] + str[i + 1];
+  i += 2;
 
-    // Capture strings
-    if (isStringQuote(p) && !stringChar) {
-      stringChar = p.str[p.i];
-      p.i += 1;
-
-      while (p.str[p.i] !== stringChar && p.str[p.i]) {
-        content += p.str[p.i];
-        p.i += 1;
-      }
-
-      content += p.str[p.i];
-      stringChar = undefined;
-    }
-
-    // Capture single line comment
-    if (p.str[p.i] + p.str[p.i + 1] === '//') {
-      p.i += 1;
-      while (p.str[p.i] !== '\n' && p.str[p.i]) {
-        content += p.str[p.i];
-        p.i += 1;
-      }
-      content += p.str[p.i];
-    }
-
-    // Capture single block comment
-    if (p.str[p.i] + p.str[p.i + 1] === '/*') {
-      p.i += 1;
-      while ((p.str[p.i] + p.str[p.i + 1] !== '*/') && p.str[p.i]) {
-        content += p.str[p.i];
-        p.i += 1;
-      }
-      content += p.str[p.i];
-    }
-
-    if (isClosedTag(p)) {
-      // Trim the tag brace
-      content = content.substring(0, content.length - 1);
-      while (p.str[p.i] !== '>' && p.str[p.i]) {
-        p.i += 1;
-      }
-      capture = false;
-    }
-
-    p.i += 1;
+  while (str[i] !== '\n' && str[i]) {
+    p.content += str[i];
+    i += 1;
   }
 
-  return content;
+  p.i = i;
 }
 function captureNode(p) {
   let hasSlash = false;
   let capture = true;
   let innerTag = '';
   let node;
-  let stringChar;
 
   // Get inner tag
   p.open += 1;
@@ -259,26 +325,22 @@ function captureNode(p) {
     throw new Error('Tag: \'' + node.tagName + '\' is not a self closing tag.');
   }
 
-  if (node.tagName === 'script' || node.tagName === 'style') {
-    node.childNodes.push(captureExecutable(p));
-    p.nodes.push(node);
-    capture = false;
-  }
-
   while (p.i < p.length && capture) {
-    // Capture strings
-    // if (isStringQuote(p) && !stringChar) {
-    //   stringChar = p.str[p.i];
-    //   p.i += 1;
+    if (isStringQuote(p)) {
+      captureString(p);
+    }
 
-    //   while (p.str[p.i] !== stringChar && p.str[p.i]) {
-    //     p.content += p.str[p.i];
-    //     p.i += 1;
-    //   }
+    if (isLineComment(p)) {
+      captureLineComment(p);
+    }
 
-    //   p.content += p.str[p.i];
-    //   stringChar = undefined;
-    // }
+    if (isBlockComment(p)) {
+      captureBlockComment(p);
+    }
+
+    if (isRegExp(p)) {
+      captureRegExp(p);
+    }
 
     if (isSelfClosingTag(p)) {
       p.open += 1;
@@ -309,11 +371,69 @@ function captureNode(p) {
     p.i += 1;
   }
 }
+function captureRegExp(p) {
+  let isEnd = false;
+  let str = p.str;
+  let i = p.i;
+
+  p.content += str[i];
+  i += 1;
+
+  for (; !isEnd && str[i]; i++) {
+    isEnd = str[i] === '/' && str[i - 1] !== '\\';
+    p.content += str[i];
+  }
+
+  p.i = i;
+}
+function captureString(p) {
+  let stringChar = p.str[p.i];
+  let isEnd = false;
+  let str = p.str;
+  let i = p.i;
+
+  p.content += str[i];
+  i += 1;
+
+  for (; !isEnd && str[i]; i++) {
+    isEnd = ((
+      str.substring(i - 3, i) === '\\\\' + stringChar
+    ) || (
+      str[i] === stringChar
+      && str[i - 1] !== '\\'
+    ));
+
+    p.content += str[i];
+  }
+
+  p.i = i;
+}
 function captureText(p) {
+  let capture = true;
   let temp;
 
-  while (p.str[p.i] !== '<' && p.i < p.length) {
-    p.i += 1;
+  while (p.i < p.length && capture) {
+    if (isStringQuote(p)) {
+      captureString(p);
+    }
+
+    if (isLineComment(p)) {
+      captureLineComment(p);
+    }
+
+    if (isBlockComment(p)) {
+      captureBlockComment(p);
+    }
+
+    if (isRegExp(p)) {
+      captureRegExp(p);
+    }
+
+    if (isOpenTag(p) || isClosedTag(p)) {
+      capture = false;
+    } else {
+      p.i += 1;
+    }
   }
 
   p.i -= 1;
@@ -323,12 +443,8 @@ function captureText(p) {
     p.i + 1
   );
 
-  if (temp[0] === '\n') {
-    temp = temp.substring(1, temp.length);
-  }
-
   if (temp.trim()) {
-    p.nodes.push(temp.trimRight());
+    p.nodes.push(temp);
   }
 
   resetCapture(p);
