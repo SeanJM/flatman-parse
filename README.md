@@ -1,4 +1,4 @@
-# Flatman Parse 1.0.1
+# Flatman Parse 1.0.2
 #### License: [MIT](https://opensource.org/licenses/MIT)
 
 #### ✅ [All 29 tests pass](#tests)
@@ -77,12 +77,12 @@ const parseHtml = require('flatman-parse');
 ### On the server
 ```javascript
 const parseHtml = require('flatman-parse');
-const result = parseHtml("<div class="my-div"></div>");
+const result = parseHtml('<div class="my-div"></div>');
 ```
 
 ### On the client
 ```javascript
-var result = parseHtml("<div class="my-div"></div>");
+var result = parseHtml('<div class="my-div"></div>');
 ```
 
 ***
