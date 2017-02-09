@@ -3,9 +3,10 @@ const parse = require('../../index.js');
 module.exports = {
   name : 'div.test > [string] + div.sibling',
   this : function () {
-    return parse(`
+    const str = `
 <div class="test">   a text string<div class="sibling"></div></div>
-    `);
+`;
+    return parse(str);
   },
   isDeepEqual : function () {
     return [{

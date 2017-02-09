@@ -21,18 +21,6 @@ module.exports = {
     <style>${bootstrap}</style>
   </head>
   <body>
-    <div class="titlebar"></div>
-    <div class="content">
-      <p>Welcome to my test</p>
-      <hr>
-      <input type="text" class="input-group" />
-      Some text
-      <span
-        class="span-class"
-        id="multi"
-        data-test="test"
-      ></span>
-    </div>
     <script>${jquery}</script>
   </body>
 </HTML>
@@ -107,42 +95,6 @@ module.exports = {
         tagName : 'body',
         attributes : {},
         childNodes : [{
-          tagName : 'div',
-          attributes : {
-            className : 'titlebar'
-          },
-          childNodes : []
-        }, {
-          tagName : 'div',
-          attributes : {
-            className : 'content'
-          },
-          childNodes : [{
-            tagName : 'p',
-            attributes : {},
-            childNodes : [ 'Welcome to my test' ]
-          }, {
-            tagName : 'hr',
-            attributes : {},
-            childNodes : []
-          }, {
-            tagName : 'input',
-            attributes : {
-              type : 'text',
-              className : 'input-group'
-            },
-            childNodes : []
-          },
-            '      Some text', {
-            tagName : 'span',
-            attributes : {
-              className : 'span-class',
-              id : 'multi',
-              'data-test' : 'test'
-            },
-            childNodes : []
-          }]
-        }, {
           tagName : 'script',
           attributes : {},
           childNodes : [jquery]

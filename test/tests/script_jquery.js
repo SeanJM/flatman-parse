@@ -1,7 +1,13 @@
 const parse = require('../../index.js');
 const fs = require('fs');
 const path = require('path');
-const script = fs.readFileSync(path.resolve('test/jquery-3.1.1.min.js'), 'utf8');
+
+const scripts = [
+  fs.readFileSync(path.resolve('test/test.js'), 'utf8'),
+  fs.readFileSync(path.resolve('test/jquery-3.1.1.min.js'), 'utf8')
+];
+
+const script = scripts[1];
 
 module.exports = {
   name : 'script (jquery)',

@@ -1,15 +1,13 @@
+const fs = require('fs');
+const path = require('path');
 const parse = require('../../index.js');
 
-const script = (`
-  var s = 888;
-  if (s < 5) {
-    someFunction();
-  } else if (s <= 4) {
-    someOtherFunction();
-  }
-  let string = 'this is a string <ithastemplate>';
-  let string = "<script></script>";
-`);
+const scripts = [
+  fs.readFileSync(path.resolve('test/test.js'), 'utf8'),
+  fs.readFileSync(path.resolve('test/jquery-3.1.1.min.js'), 'utf8')
+];
+
+const script = scripts[1];
 
 module.exports = {
   name : 'script',
