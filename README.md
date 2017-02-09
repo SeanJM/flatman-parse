@@ -37,6 +37,40 @@ const parseHtml = require('flatman-parse');
 ```html
 <script src="flatman-parse.js"></script>
 ```
+##  Nodes
+
+
+- Regular Node
+- DocType
+- Comment
+
+### Regular Node
+```javascript
+{
+  tagName : 'div',
+  attributes : {},
+  childNodes : []
+}
+```
+
+### DocType
+```javascript
+{
+  tagName : 'doctype',
+  rootElement : string,
+  type : 'public'|'private',
+  publicIdentifier : string,
+  privateIdentifier : string
+}
+```
+
+### Comment
+```javascript
+{
+  tagName : 'comment',
+  value : value: string
+}
+```
 ##  Usage
 
 
@@ -82,7 +116,7 @@ var result = parseHtml("<div class="my-div"></div>");
   24. <div/> (error)..................................................... ✅
   25. div................................................................ ✅
   26. style (bootstrap).................................................. ✅
-  27. style (bootstrap).................................................. ✅
+  27. style nested (bootstrap)........................................... ✅
   28. <div> + <div>...................................................... ✅
   29. input (optional slash)............................................. ✅
 ```

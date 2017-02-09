@@ -4,7 +4,7 @@ const fs = require('fs');
 const style = fs.readFileSync(path.resolve('test/bootstrap.min.css'), 'utf8');
 
 module.exports = {
-  name : 'style (bootstrap)',
+  name : 'style nested (bootstrap)',
   this : function () {
     const str = `<div><style>${style}</style></div>`;
     return parse(str);
