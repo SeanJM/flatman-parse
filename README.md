@@ -1,50 +1,109 @@
-# Flatman Parse 0.0.0
+# Flatman Parse 1.0.0
 #### License: [MIT](https://opensource.org/licenses/MIT)
 
-#### 🐛 No unit tests
+#### ✅ All 29 tests pass
 
 ## Table of Contents
 
 #### Overview
 
 
-- Description
-  - [Description](#--description-top)
+- Description.html
+  - [Description.html](#--description-h-top)
 
-- Example
-  - [Example](#--example-top)
+- Installation.html
+  - [Installation.html](#--installation-h-top)
 
-- Installation
-  - [Installation](#--installation-top)
+- Usage.html
+  - [Usage.html](#--usage-h-top)
+- [Tests](#tests)
 
-- Notes
-  - [Notes](#--notes-top)
+## Description.html
+### Description.html ([top](#table-of-contents))
 
-## Description
-### Description.md ([top](#table-of-contents))
+<markdown title="Description">
+  ## An HTML parser
+  Takes your raw HTML and returns a JavaScript array with a structure similar to this:
 
-<!--
-  Describe to the world what you toiled over. You magnificent being.
-  (The title 'Is going to be generated')
--->
-## Example
-### Example.md ([top](#table-of-contents))
+  ```html
+  <div class="titlebar"></div>
+  ```
 
+  ```javascript
+  [{
+    tagName : 'div',
+    attributes : {
+      className : 'titlebar'
+    },
+    childNodes : []
+  }]
+  ```
+</markdown>
+## Installation.html
+### Installation.html ([top](#table-of-contents))
 
-<!--
-  An brief example which showcases your plugin
--->
-## Installation
-### Installation.md ([top](#table-of-contents))
+<markdown title="Installation">
+  ### NPM
+  ```bash
+  npm i -S flatman-parse
+  ```
 
+  ```javascript
+  const parseHtml = require('flatman-parse');
+  ```
 
-<!--
-  Installation instructions
--->
-## Notes
-### Notes.md ([top](#table-of-contents))
+  ### Download the `flatman-parse.js` and use on the client
+  ```html
+  <script src="flatman-parse.js"></script>
+  ```
+</markdown>
+## Usage.html
+### Usage.html ([top](#table-of-contents))
 
+<markdown title="Usage">
+  ### On the server
+  ```javascript
+  const parseHtml = require('flatman-parse');
+  const result = parseHtml("<div class="my-div"></div>");
+  ```
 
-<!--
-  Anything 'notable' that the user should know
--->
+  ### On the client
+  ```javascript
+  var result = parseHtml("<div class="my-div"></div>");
+  ```
+</markdown>
+***
+
+## Tests
+
+```
+   1. The Acid Test...................................................... ✅
+   2. Basic scaffold..................................................... ✅
+   3. Comment............................................................ ✅
+   4. div.test........................................................... ✅
+   5. Doc type........................................................... ✅
+   6. Doc type HTML4..................................................... ✅
+   7. hr................................................................. ✅
+   8. input.............................................................. ✅
+   9. div > input........................................................ ✅
+  10. div > input + div.................................................. ✅
+  11. div > input + [string]............................................. ✅
+  12. link............................................................... ✅
+  13. meta............................................................... ✅
+  14. attributes (multiline)............................................. ✅
+  15. comment (multiline)................................................ ✅
+  16. (div > div + div) * 2.............................................. ✅
+  17. div > div.......................................................... ✅
+  18. div.test > [string]................................................ ✅
+  19. div.test > [string] + div.sibling.................................. ✅
+  20. script............................................................. ✅
+  21. script (jquery).................................................... ✅
+  22. nested script (jquery)............................................. ✅
+  23. <input/>........................................................... ✅
+  24. <div/> (error)..................................................... ✅
+  25. div................................................................ ✅
+  26. style (bootstrap).................................................. ✅
+  27. style (bootstrap).................................................. ✅
+  28. <div> + <div>...................................................... ✅
+  29. input (optional slash)............................................. ✅
+```
