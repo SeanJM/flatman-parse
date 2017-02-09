@@ -1,5 +1,5 @@
 if (typeof module === 'object') {
-  module.exports = parse;
+  module.exports = parseHtml;
 } else if (flatman) {
-  flatman.parse = parse;
+  flatman.parse = parseHtml;
 }

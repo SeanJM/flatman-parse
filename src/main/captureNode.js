@@ -1,8 +1,8 @@
 function captureNode(p) {
-  let hasSlash = false;
-  let capture = true;
-  let innerTag = '';
-  let node;
+  var hasSlash = false;
+  var capture = true;
+  var innerTag = '';
+  var node;
 
   // Get inner tag
   p.open += 1;
@@ -56,7 +56,7 @@ function captureNode(p) {
     }
 
     if (p.open - p.closed === 0) {
-      node.childNodes = parse(p.content);
+      node.childNodes = parseHtml(p.content);
       p.nodes.push(node);
 
       // Go to the end of the closed tag

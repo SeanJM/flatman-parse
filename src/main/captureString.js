@@ -1,8 +1,8 @@
 function captureString(p) {
-  let stringChar = p.str[p.i];
-  let isEnd = false;
-  let str = p.str;
-  let i = p.i;
+  var stringChar = p.str[p.i];
+  var isEnd = false;
+  var str = p.str;
+  var i = p.i;
 
   p.content += str[i];
   i += 1;

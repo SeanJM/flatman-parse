@@ -1,5 +1,5 @@
-function parse(str) {
-  let p = {
+function parseHtml(str) {
+  var p = {
     content : '',
     str : str,
     i : 0,

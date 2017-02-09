@@ -1,6 +1,6 @@
 function isSelfClosingTag(p) {
-  const i = p.i;
-  const str = p.str
+  var i = p.i;
+  var str = p.str
     .substring(i + 1, i + 8)
     .toLowerCase();
 

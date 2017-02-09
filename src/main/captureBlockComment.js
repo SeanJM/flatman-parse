@@ -1,8 +1,8 @@
 function captureBlockComment(p) {
-  let isEnd = false;
-  let init = p.i;
-  let i = p.i;
-  let str = p.str;
+  var isEnd = false;
+  var init = p.i;
+  var i = p.i;
+  var str = p.str;
 
   p.content += str[i];
   i += 1;

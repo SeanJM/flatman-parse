@@ -1,7 +1,7 @@
 function captureRegExp(p) {
-  let isEnd = false;
-  let str = p.str;
-  let i = p.i;
+  var isEnd = false;
+  var str = p.str;
+  var i = p.i;
 
   p.content += str[i];
   i += 1;

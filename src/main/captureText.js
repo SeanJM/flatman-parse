@@ -1,6 +1,6 @@
 function captureText(p) {
-  let capture = true;
-  let temp;
+  var capture = true;
+  var temp;
 
   while (p.i < p.length && capture) {
     if (isStringQuote(p)) {

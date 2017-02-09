@@ -1,6 +1,6 @@
 function captureLineComment(p) {
-  const i = p.i;
-  const str = p.str;
+  var i = p.i;
+  var str = p.str;
 
   p.content += str[i] + str[i + 1];
   i += 2;

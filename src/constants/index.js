@@ -1,10 +1,10 @@
-const SPACE = {
+var SPACE = {
   ' ' : true,
   '\t' : true,
   '\n' : true
 };
 
-const SELF_CLOSING = {
+var SELF_CLOSING = {
   br : true,
   hr : true,
 
@@ -29,7 +29,7 @@ const SELF_CLOSING = {
   command : true,
 };
 
-const IS_LETTER = {
+var IS_LETTER = {
   // Lowercase
   'a' : true,
   'b' : true,

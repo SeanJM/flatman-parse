@@ -1,16 +1,16 @@
 function getNode(str) {
-  let stringChar;
+  var stringChar;
 
-  let i = 0;
-  let n = str.length;
+  var i = 0;
+  var n = str.length;
 
-  let node = {
+  var node = {
     tagName : '',
     attributes : {},
     childNodes : []
   };
 
-  let attr = {
+  var attr = {
     name : '',
     value : ''
   };

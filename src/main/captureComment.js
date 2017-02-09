@@ -1,5 +1,5 @@
 function captureComment(p) {
-  let value = '';
+  var value = '';
 
   p.i += 4;
 

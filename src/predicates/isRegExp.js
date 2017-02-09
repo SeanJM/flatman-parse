@@ -1,9 +1,9 @@
 function isRegExp(p) {
-  const p1 = p.str[p.i];
-  const p2 = p.str[p.i + 1];
+  var p1 = p.str[p.i];
+  var p2 = p.str[p.i + 1];
 
-  const i = p.i;
-  const str = p.str;
+  var i = p.i;
+  var str = p.str;
 
   return (
     p1 === '/'

@@ -1,12 +1,12 @@
 function captureDocType(p) {
-  const str = p.str;
-  let i = p.i;
+  var str = p.str;
+  var i = p.i;
 
-  let rootElement = '';
-  let type = '';
-  let publicIdentifier = '';
-  let privateIdentifier = '';
-  let stringChar;
+  var rootElement = '';
+  var type = '';
+  var publicIdentifier = '';
+  var privateIdentifier = '';
+  var stringChar;
 
   i += 10; // Offset doctype
 
