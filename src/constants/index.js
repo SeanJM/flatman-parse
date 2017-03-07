@@ -27,6 +27,11 @@ var SELF_CLOSING = {
   source : true,
 
   command : true,
+
+  // SVGs
+  circle : true,
+  path : true,
+  polygon : true,
 };
 
 var IS_LETTER = {

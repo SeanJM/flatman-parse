@@ -5,7 +5,7 @@ function isOpenTag(p) {
   var p2 = str[i + 2];
   return (
     str[i] === '<'
-    && (IS_LETTER[p1] && IS_LETTER[p2])
+    && (IS_LETTER[p1] && (IS_LETTER[p2] || p2 === ' ' || p2 === '>'))
     && str.substring(i + 1, i + 10) !== 'arguments'
   );
 }
