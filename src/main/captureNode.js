@@ -60,10 +60,8 @@ function captureNode(p) {
       p.nodes.push(node);
 
       // Go to the end of the closed tag
-      while (p.str[p.i] !== '>' && p.str[p.i]) {
-        p.i += 1;
-      }
-
+      p.i = p.str.indexOf('>', p.i);
+      p.i -= 1;
       resetCapture(p);
       capture = false;
     }
