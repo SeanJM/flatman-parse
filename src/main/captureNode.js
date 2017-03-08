@@ -25,6 +25,7 @@ function captureNode(p) {
     capture = false;
     p.nodes.push(node);
     resetCapture(p);
+    p.i -= 1;
   } else if (hasSlash) {
     throw new Error('Tag: \'' + node.tagName + '\' is not a self closing tag.');
   }

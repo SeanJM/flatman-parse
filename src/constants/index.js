@@ -30,6 +30,7 @@ var SELF_CLOSING = {
 
   // SVGs
   circle : true,
+  rect : true,
   path : true,
   polygon : true,
 };
