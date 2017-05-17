@@ -49,7 +49,11 @@ function getNode(str) {
       }
 
       i += 1;
-      node.attributes[filterAttributeName(attr.name)] = attr.value;
+
+      node.attributes[filterAttributeName(attr.name)] = (
+        filterAttributeValue(attr.name, attr.value)
+      );
+
       attr.name = '';
       attr.value = '';
     }

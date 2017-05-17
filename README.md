@@ -1,7 +1,7 @@
 # Flatman Parse 1.0.5
 #### License: [MIT](https://opensource.org/licenses/MIT)
 
-#### ✅ [All 34 tests pass](#tests)
+#### ✅ [All 35 tests pass](#tests)
 ##  Description
 
 
@@ -71,6 +71,25 @@ const parseHtml = require('flatman-parse');
   value : value: string
 }
 ```
+##  Style attribute
+
+
+```html
+<div style="float: left; margin-left: auto"></div>
+```
+
+```javascript
+  {
+    tagName : 'div',
+    attributes : {
+      style  : {
+        float : 'left',
+        marginLeft : 'auto'
+      }
+    }
+  }
+```
+
 ##  Usage
 
 
@@ -122,6 +141,7 @@ var result = parseHtml('<div class="my-div"></div>');
   30. <div> + <div>...................................................... ✅
   31. input (optional slash)............................................. ✅
   32. No spaces.......................................................... ✅
-  33. svg (acid test).................................................... ✅
-  34. svg (g tag)........................................................ ✅
+  33. style attribute.................................................... ✅
+  34. svg (acid test).................................................... ✅
+  35. svg (g tag)........................................................ ✅
 ```

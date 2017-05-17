@@ -21,6 +21,7 @@ function captureNode(p) {
   p.i += 1;
   node = getNode(innerTag);
   innerTag = '';
+
   if (hasSlash && SELF_CLOSING[node.tagName] || SELF_CLOSING[node.tagName]) {
     capture = false;
     p.nodes.push(node);
