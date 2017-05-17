@@ -1,4 +1,4 @@
-# Flatman Parse 1.1.0
+# Flatman Parse 1.2.0
 #### License: [MIT](https://opensource.org/licenses/MIT)
 
 #### ✅ [All 36 tests pass](#tests)
@@ -68,8 +68,10 @@ const parseHtml = require('flatman-parse');
 ```javascript
 {
   tagName : 'xml',
-  version : String,
-  encoding : String,
+  attributes : {
+    version : String,
+    encoding : String,
+  }
 }
 ```
 

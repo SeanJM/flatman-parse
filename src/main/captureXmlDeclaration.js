@@ -1,6 +1,7 @@
 function captureXmlDeclaration(p) {
   var node = {
-    tagName : 'xml'
+    tagName : 'xml',
+    attributes : {}
   };
 
   var attr = '';
@@ -26,7 +27,7 @@ function captureXmlDeclaration(p) {
       }
 
       temp[1] = temp[1].substring(1, temp[1].length - 1);
-      node[temp[0]] = temp[1];
+      node.attributes[temp[0]] = temp[1];
       attr = '';
     }
 

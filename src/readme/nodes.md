@@ -28,8 +28,10 @@
 ```javascript
 {
   tagName : 'xml',
-  version : String,
-  encoding : String,
+  attributes : {
+    version : String,
+    encoding : String,
+  }
 }
 ```
 

@@ -10,8 +10,10 @@ module.exports = {
   isDeepEqual : function () {
     return [{
       tagName : 'xml',
-      version : '1.0',
-      encoding : 'utf-8'
+      attributes : {
+        version : '1.0',
+        encoding : 'utf-8'
+      }
     }];
   }
 };
