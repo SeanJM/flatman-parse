@@ -1,7 +1,7 @@
-# Flatman Parse 1.0.5
+# Flatman Parse 1.1.0
 #### License: [MIT](https://opensource.org/licenses/MIT)
 
-#### ✅ [All 35 tests pass](#tests)
+#### ✅ [All 36 tests pass](#tests)
 ##  Description
 
 
@@ -57,10 +57,19 @@ const parseHtml = require('flatman-parse');
 ```javascript
 {
   tagName : 'doctype',
-  rootElement : string,
+  rootElement : String,
   type : 'public'|'private',
-  publicIdentifier : string,
-  privateIdentifier : string
+  publicIdentifier : String,
+  privateIdentifier : String
+}
+```
+
+### XML Declaration
+```javascript
+{
+  tagName : 'xml',
+  version : String,
+  encoding : String,
 }
 ```
 
@@ -68,7 +77,7 @@ const parseHtml = require('flatman-parse');
 ```javascript
 {
   tagName : 'comment',
-  value : value: string
+  value : value: String
 }
 ```
 ##  Style attribute
@@ -139,9 +148,10 @@ var result = parseHtml('<div class="my-div"></div>');
   28. style nested (bootstrap)........................................... ✅
   29. svg (groups)....................................................... ✅
   30. <div> + <div>...................................................... ✅
-  31. input (optional slash)............................................. ✅
-  32. No spaces.......................................................... ✅
-  33. style attribute.................................................... ✅
-  34. svg (acid test).................................................... ✅
-  35. svg (g tag)........................................................ ✅
+  31. xml declaration.................................................... ✅
+  32. input (optional slash)............................................. ✅
+  33. No spaces.......................................................... ✅
+  34. style attribute.................................................... ✅
+  35. svg (acid test).................................................... ✅
+  36. svg (g tag)........................................................ ✅
 ```

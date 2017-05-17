@@ -20,6 +20,8 @@ function parseHtml(str) {
         captureComment(p);
       } else if (isDocType(p)) {
         captureDocType(p);
+      } else if (isXmlDeclaration(p)) {
+        captureXmlDeclaration(p);
       }
     }
   }

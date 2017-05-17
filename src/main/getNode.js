@@ -33,10 +33,7 @@ function getNode(str) {
     }
 
     if (str[i] === '=') {
-      while (
-        (str[i] !== '\'' && str[i] !== '\"')
-        && str[i]
-      ) {
+      while (!QUOTE[str[i]] && str[i]) {
         i += 1;
       }
 

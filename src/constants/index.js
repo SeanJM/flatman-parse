@@ -4,6 +4,15 @@ var SPACE = {
   '\n' : true
 };
 
+var QUOTE = {
+  "'" : true,
+  '"' : true
+};
+
+var XML_END = {
+  "?>" : true
+};
+
 var SELF_CLOSING = {
   br : true,
   hr : true,

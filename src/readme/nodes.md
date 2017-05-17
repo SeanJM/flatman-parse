@@ -17,10 +17,19 @@
 ```javascript
 {
   tagName : 'doctype',
-  rootElement : string,
+  rootElement : String,
   type : 'public'|'private',
-  publicIdentifier : string,
-  privateIdentifier : string
+  publicIdentifier : String,
+  privateIdentifier : String
+}
+```
+
+### XML Declaration
+```javascript
+{
+  tagName : 'xml',
+  version : String,
+  encoding : String,
 }
 ```
 
@@ -28,6 +37,6 @@
 ```javascript
 {
   tagName : 'comment',
-  value : value: string
+  value : value: String
 }
 ```
