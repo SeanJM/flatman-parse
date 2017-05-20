@@ -1,4 +1,8 @@
 function isStringQuote(p) {
   var str = p.str[p.i];
-  return str === '\'' || str === '"' || str === '`';
+  var before = p.str[p.i - 1];
+
+  return (
+    str === '\'' || str === '"' || str === '`'
+  ) && !IS_LETTER[before];
 }
