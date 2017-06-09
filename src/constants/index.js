@@ -4,6 +4,10 @@ var SPACE = {
   '\n' : true
 };
 
+var GT = {
+  '>' : true
+};
+
 var QUOTE = {
   "'" : true,
   '"' : true
