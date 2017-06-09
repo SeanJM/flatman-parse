@@ -8,6 +8,21 @@ var GT = {
   '>' : true
 };
 
+var TAG_HEADER = {
+  'h1' : true,
+  'h2' : true,
+  'h3' : true,
+  'h4' : true,
+  'h5' : true,
+  'h6' : true,
+  'H1' : true,
+  'H2' : true,
+  'H3' : true,
+  'H4' : true,
+  'H5' : true,
+  'H6' : true,
+}
+
 var QUOTE = {
   "'" : true,
   '"' : true
