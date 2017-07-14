@@ -1,7 +1,7 @@
 function isSelfClosingTag(p) {
   var i = p.i;
   var str = p.str
-    .substring(i + 1, i + 8)
+    .substring(i + 1, i + 9)
     .toLowerCase();
 
   return (
