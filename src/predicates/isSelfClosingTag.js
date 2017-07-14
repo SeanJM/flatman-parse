@@ -21,6 +21,9 @@ function isSelfClosingTag(p) {
       str.substring(0, 6) ]
       && (GT[str[6]] || SPACE[str[6]]) ||
     SELF_CLOSING[
+      str.substring(0, 7) ]
+      && (GT[str[7]] || SPACE[str[7]]) ||
+    SELF_CLOSING[
       str ]
       && (GT[str[2]] || SPACE[str[2]])
   );
