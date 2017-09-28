@@ -16,5 +16,21 @@
     "lodash": "^4.17.4",
     "match-file-utility": "^3.4.0",
     "tiny-test": "^0.9.2"
-  }
+  },
+  "devDependencies": {
+    "glob": "^7.1.2"
+  },
+  "description": "#### ✅ [All 39 tests pass](#tests) ##  Description",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeanJM/flatman-parse.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/SeanJM/flatman-parse/issues"
+  },
+  "homepage": "https://github.com/SeanJM/flatman-parse#readme"
 }
