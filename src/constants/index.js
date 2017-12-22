@@ -1,31 +1,31 @@
 const SPACE = {
-  ' ' : true,
-  '\t' : true,
-  '\n' : true
+  " " : true,
+  "\t" : true,
+  "\n" : true
 };
 
 const GT = {
-  '>' : true
+  ">" : true
 };
 
 const TAG_HEADER = {
-  'h1' : true,
-  'h2' : true,
-  'h3' : true,
-  'h4' : true,
-  'h5' : true,
-  'h6' : true,
-  'H1' : true,
-  'H2' : true,
-  'H3' : true,
-  'H4' : true,
-  'H5' : true,
-  'H6' : true,
-}
+  "h1" : true,
+  "h2" : true,
+  "h3" : true,
+  "h4" : true,
+  "h5" : true,
+  "h6" : true,
+  "H1" : true,
+  "H2" : true,
+  "H3" : true,
+  "H4" : true,
+  "H5" : true,
+  "H6" : true,
+};
 
 const QUOTE = {
   "'" : true,
-  '"' : true
+  "\"" : true
 };
 
 const XML_END = {
@@ -48,7 +48,6 @@ const SELF_CLOSING = {
   embed : true,
   input : true,
   param : true,
-  param : true,
   track : true,
 
   keygen : true,
@@ -57,76 +56,82 @@ const SELF_CLOSING = {
   command : true,
 
   // SVGs
-  circle  : true,
-  ellipse : true,
-  rect    : true,
-  path    : true,
-  polygon : true,
+  circle   : true,
+  ellipse  : true,
+  rect     : true,
+  path     : true,
+  polygon  : true,
+};
+
+const MAYBE_SELF_CLOSING = {
+  // SVGs
+  use : true
 };
 
 const IS_LETTER = {
   // Lowercase
-  'a' : true,
-  'b' : true,
-  'c' : true,
-  'd' : true,
-  'e' : true,
-  'f' : true,
-  'g' : true,
-  'h' : true,
-  'i' : true,
-  'j' : true,
-  'k' : true,
-  'l' : true,
-  'm' : true,
-  'n' : true,
-  'o' : true,
-  'p' : true,
-  'q' : true,
-  'r' : true,
-  's' : true,
-  't' : true,
-  'u' : true,
-  'v' : true,
-  'w' : true,
-  'x' : true,
-  'y' : true,
-  'z' : true,
+  "a" : true,
+  "b" : true,
+  "c" : true,
+  "d" : true,
+  "e" : true,
+  "f" : true,
+  "g" : true,
+  "h" : true,
+  "i" : true,
+  "j" : true,
+  "k" : true,
+  "l" : true,
+  "m" : true,
+  "n" : true,
+  "o" : true,
+  "p" : true,
+  "q" : true,
+  "r" : true,
+  "s" : true,
+  "t" : true,
+  "u" : true,
+  "v" : true,
+  "w" : true,
+  "x" : true,
+  "y" : true,
+  "z" : true,
   // Uppercase
-  'A' : true,
-  'B' : true,
-  'C' : true,
-  'D' : true,
-  'E' : true,
-  'F' : true,
-  'G' : true,
-  'H' : true,
-  'I' : true,
-  'J' : true,
-  'K' : true,
-  'L' : true,
-  'M' : true,
-  'N' : true,
-  'O' : true,
-  'P' : true,
-  'Q' : true,
-  'R' : true,
-  'S' : true,
-  'T' : true,
-  'U' : true,
-  'V' : true,
-  'W' : true,
-  'X' : true,
-  'Y' : true,
-  'Z' : true,
+  "A" : true,
+  "B" : true,
+  "C" : true,
+  "D" : true,
+  "E" : true,
+  "F" : true,
+  "G" : true,
+  "H" : true,
+  "I" : true,
+  "J" : true,
+  "K" : true,
+  "L" : true,
+  "M" : true,
+  "N" : true,
+  "O" : true,
+  "P" : true,
+  "Q" : true,
+  "R" : true,
+  "S" : true,
+  "T" : true,
+  "U" : true,
+  "V" : true,
+  "W" : true,
+  "X" : true,
+  "Y" : true,
+  "Z" : true,
 };
 
 module.exports = {
-  SPACE,
   GT,
-  TAG_HEADER,
-  QUOTE,
-  XML_END,
-  SELF_CLOSING,
   IS_LETTER,
+  MAYBE_SELF_CLOSING,
+  QUOTE,
+  SELF_CLOSING,
+  SPACE,
+  TAG_HEADER,
+  XML_END,
 };

@@ -1,4 +1,4 @@
-const { SPACE, SELF_CLOSING } = require("../constants/");
+const { SPACE, SELF_CLOSING, MAYBE_SELF_CLOSING } = require("../constants/");
 const isOpenTag               = require("../predicates/isOpenTag");
 const isText                  = require("../predicates/isText");
 const isComment               = require("../predicates/isComment");
@@ -7,17 +7,18 @@ const isXmlDeclaration        = require("../predicates/isXmlDeclaration");
 
 const captureComment          = require("./captureComment");
 const captureDocType          = require("./captureDocType");
-const clearString           = require("./clearString");
 const captureText             = require("./captureText");
 const captureXmlDeclaration   = require("./captureXmlDeclaration");
 const clearBlockComment       = require("./clearBlockComment");
 const clearComment            = require("./clearComment");
 const clearLineComment        = require("./clearLineComment");
 const clearRegExp             = require("./clearRegExp");
+const clearString             = require("./clearString");
 const getNode                 = require("./getNode");
 const resetCapture            = require("./resetCapture");
 
 const isBlockComment          = require("../predicates/isBlockComment");
+const isMaybeSelfClosingTag   = require("../predicates/isMaybeSelfClosingTag");
 const isClosedTag             = require("../predicates/isClosedTag");
 const isOpenComment           = require("../predicates/isOpenComment");
 const isLineComment           = require("../predicates/isLineComment");
@@ -49,7 +50,7 @@ function captureNode(p) {
   node = getNode(innerTag);
   innerTag = "";
 
-  if (hasSlash && SELF_CLOSING[node.tagName] || SELF_CLOSING[node.tagName]) {
+  if (hasSlash && SELF_CLOSING[node.tagName] || SELF_CLOSING[node.tagName] || MAYBE_SELF_CLOSING[node.tagName]) {
     capture = false;
     p.nodes.push(node);
     resetCapture(p);
@@ -79,7 +80,10 @@ function captureNode(p) {
       clearComment(p);
     }
 
-    if (isSelfClosingTag(p)) {
+    if (isMaybeSelfClosingTag(p)) {
+      p.open += 1;
+      p.closed += 1;
+    } else if (isSelfClosingTag(p)) {
       p.open += 1;
       p.closed += 1;
     } else if (isOpenTag(p)) {
