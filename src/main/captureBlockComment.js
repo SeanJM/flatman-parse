@@ -1,4 +1,7 @@
-function captureBlockComment(p) {
+const isOpenTag = require("../predicates/isOpenTag");
+const isClosedTag = require("../predicates/isClosedTag");
+
+module.exports = function captureBlockComment(p) {
   var isEnd = false;
   var init = p.i;
   var i = p.i;
@@ -8,7 +11,7 @@ function captureBlockComment(p) {
   i += 1;
 
   for (; !isEnd && str[i]; i++) {
-    isEnd = str[i - 1] + str[i] === '*/';
+    isEnd = str[i - 1] + str[i] === "*/";
     p.content += str[i];
   }
 
@@ -20,4 +23,4 @@ function captureBlockComment(p) {
   }
 
   p.i = i;
-}
+};

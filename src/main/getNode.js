@@ -1,18 +1,22 @@
-function getNode(str) {
+const { SPACE, QUOTE }     = require("../constants/");
+const filterAttributeName  = require("./filterAttributeName");
+const filterAttributeValue = require("./filterAttributeValue");
+
+module.exports = function getNode(str) {
   var stringChar;
 
   var i = 0;
   var n = str.length;
 
   var node = {
-    tagName : '',
+    tagName : "",
     attributes : {},
     childNodes : []
   };
 
   var attr = {
-    name : '',
-    value : ''
+    name : "",
+    value : ""
   };
 
   while (!SPACE[str[i]] && str[i]) {
@@ -27,12 +31,12 @@ function getNode(str) {
       i += 1;
     }
 
-    while (str[i] !== '=' && str[i]) {
+    while (str[i] !== "=" && str[i]) {
       attr.name += str[i];
       i += 1;
     }
 
-    if (str[i] === '=') {
+    if (str[i] === "=") {
       while (!QUOTE[str[i]] && str[i]) {
         i += 1;
       }
@@ -51,10 +55,10 @@ function getNode(str) {
         filterAttributeValue(attr.name, attr.value)
       );
 
-      attr.name = '';
-      attr.value = '';
+      attr.name = "";
+      attr.value = "";
     }
   }
 
   return node;
-}
+};

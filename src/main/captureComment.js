@@ -1,4 +1,4 @@
-function captureComment(p) {
+module.exports = function captureComment(p) {
   var value = '';
 
   p.i += 4;
@@ -19,4 +19,4 @@ function captureComment(p) {
   });
 
   resetCapture(p);
-}
+};

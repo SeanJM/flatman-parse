@@ -1,14 +1,14 @@
-var SPACE = {
+const SPACE = {
   ' ' : true,
   '\t' : true,
   '\n' : true
 };
 
-var GT = {
+const GT = {
   '>' : true
 };
 
-var TAG_HEADER = {
+const TAG_HEADER = {
   'h1' : true,
   'h2' : true,
   'h3' : true,
@@ -23,16 +23,16 @@ var TAG_HEADER = {
   'H6' : true,
 }
 
-var QUOTE = {
+const QUOTE = {
   "'" : true,
   '"' : true
 };
 
-var XML_END = {
+const XML_END = {
   "?>" : true
 };
 
-var SELF_CLOSING = {
+const SELF_CLOSING = {
   br : true,
   hr : true,
 
@@ -57,13 +57,14 @@ var SELF_CLOSING = {
   command : true,
 
   // SVGs
-  circle : true,
-  rect : true,
-  path : true,
+  circle  : true,
+  ellipse : true,
+  rect    : true,
+  path    : true,
   polygon : true,
 };
 
-var IS_LETTER = {
+const IS_LETTER = {
   // Lowercase
   'a' : true,
   'b' : true,
@@ -118,4 +119,14 @@ var IS_LETTER = {
   'X' : true,
   'Y' : true,
   'Z' : true,
+};
+
+module.exports = {
+  SPACE,
+  GT,
+  TAG_HEADER,
+  QUOTE,
+  XML_END,
+  SELF_CLOSING,
+  IS_LETTER,
 };

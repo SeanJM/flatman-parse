@@ -1,4 +1,4 @@
-function captureString(p) {
+module.exports = function captureString(p) {
   var stringChar = p.str[p.i];
   var isEnd = false;
   var str = p.str;
@@ -19,4 +19,4 @@ function captureString(p) {
   }
 
   p.i = i;
-}
+};

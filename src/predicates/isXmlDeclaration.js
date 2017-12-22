@@ -1,4 +1,4 @@
-function isXmlDeclaration(p) {
+module.exports = function isXmlDeclaration(p) {
   var i = p.i;
 
   var s = p.str
@@ -6,4 +6,4 @@ function isXmlDeclaration(p) {
     .toLowerCase();
 
   return s === '<?xml ';
-}
+};

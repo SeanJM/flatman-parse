@@ -1,4 +1,4 @@
-function captureText(p) {
+module.exports = function captureText(p) {
   var capture = true;
   var temp;
 
@@ -38,4 +38,4 @@ function captureText(p) {
   }
 
   resetCapture(p);
-}
+};

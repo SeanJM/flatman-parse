@@ -1,4 +1,4 @@
-function captureRegExp(p) {
+module.exports = function captureRegExp(p) {
   var isEnd = false;
   var str = p.str;
   var i = p.i;
@@ -12,4 +12,4 @@ function captureRegExp(p) {
   }
 
   p.i = i;
-}
+};

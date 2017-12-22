@@ -1,26 +1,44 @@
-function captureNode(p) {
+const { SELF_CLOSING }    = require("../constants/");
+
+const getNode             = require("./getNode");
+const captureString       = require("./captureString");
+const captureBlockComment = require("./captureBlockComment");
+const captureLineComment  = require("./captureLineComment");
+const resetCapture        = require("./resetCapture");
+const captureRegExp       = require("./captureRegExp");
+
+const isRegExp            = require("../predicates/isRegExp");
+const isSelfClosingTag    = require("../predicates/isSelfClosingTag");
+const isOpenTag           = require("../predicates/isOpenTag");
+const isClosedTag         = require("../predicates/isClosedTag");
+const parseHtml           = require("./parseHtml");
+const isStringQuote       = require("../predicates/isStringQuote");
+const isBlockComment      = require("../predicates/isBlockComment");
+const isLineComment       = require("../predicates/isLineComment");
+
+module.exports = function captureNode(p) {
   var hasSlash = false;
   var capture = true;
-  var innerTag = '';
+  var innerTag = "";
   var node;
 
   // Get inner tag
   p.open += 1;
   p.i += 1;
 
-  while (p.str[p.i] !== '>' && p.str[p.i]) {
+  while (p.str[p.i] !== ">" && p.str[p.i]) {
     innerTag += p.str[p.i];
     p.i += 1;
   }
 
-  if (innerTag[innerTag.length - 1] === '/') {
+  if (innerTag[innerTag.length - 1] === "/") {
     innerTag = innerTag.substring(0, innerTag.length - 1);
     hasSlash = true;
   }
 
   p.i += 1;
   node = getNode(innerTag);
-  innerTag = '';
+  innerTag = "";
 
   if (hasSlash && SELF_CLOSING[node.tagName] || SELF_CLOSING[node.tagName]) {
     capture = false;
@@ -28,7 +46,7 @@ function captureNode(p) {
     resetCapture(p);
     p.i -= 1;
   } else if (hasSlash) {
-    throw new Error('Tag: \'' + node.tagName + '\' is not a self closing tag.');
+    throw new Error("Tag: '" + node.tagName + "' is not a self closing tag.");
   }
 
   while (p.i < p.length && capture) {
@@ -62,7 +80,7 @@ function captureNode(p) {
       p.nodes.push(node);
 
       // Go to the end of the closed tag
-      p.i = p.str.indexOf('>', p.i);
+      p.i = p.str.indexOf(">", p.i);
       p.i -= 1;
       resetCapture(p);
       capture = false;
@@ -74,4 +92,4 @@ function captureNode(p) {
 
     p.i += 1;
   }
-}
+};

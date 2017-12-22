@@ -1,4 +1,4 @@
-function filterAttributeStyle(style) {
+module.exports = function filterAttributeStyle(style) {
   var obj = {};
   var each = style.split(';');
   var styleTemp;
@@ -11,4 +11,4 @@ function filterAttributeStyle(style) {
   }
 
   return obj;
-}
+};

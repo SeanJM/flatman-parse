@@ -3,21 +3,15 @@
   "version": "1.2.7",
   "license": "MIT",
   "author": "Sean MacIsaac <seanjmacisaac@gmail.com> (http://twitter.com/seanjmacisaac)",
-  "main": "flatman-parse.js",
+  "main": "index.js",
   "scripts": {
-    "test": "test/index.js"
-  },
-  "dependencies": {
-    "grunt": "^1.0.1",
-    "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-uglify": "^2.1.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "lodash": "^4.17.4",
-    "match-file-utility": "^3.4.0",
-    "tiny-test": "^0.9.2"
+    "start": "webpack --watch",
+    "build": "NODE_ENV=production webpack",
+    "test": "node test/index.js"
   },
   "devDependencies": {
+    "lodash": "^4.17.4",
+    "tiny-test": "^0.9.4",
     "glob": "^7.1.2"
   },
   "description": "#### ✅ [All 39 tests pass](#tests) ##  Description",
@@ -32,5 +26,15 @@
   "bugs": {
     "url": "https://github.com/SeanJM/flatman-parse/issues"
   },
-  "homepage": "https://github.com/SeanJM/flatman-parse#readme"
+  "homepage": "https://github.com/SeanJM/flatman-parse#readme",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.13.1",
+    "eslint-plugin-dependencies": "^2.4.0",
+    "uglifyjs-webpack-plugin": "^1.1.4",
+    "webpack": "^3.10.0"
+  }
 }

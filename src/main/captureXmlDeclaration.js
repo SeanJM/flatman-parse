@@ -1,4 +1,4 @@
-function captureXmlDeclaration(p) {
+module.exports = function captureXmlDeclaration(p) {
   var node = {
     tagName : 'xml',
     attributes : {}
@@ -39,4 +39,4 @@ function captureXmlDeclaration(p) {
   p.i = i;
   p.nodes.push(node);
   resetCapture(p);
-}
+};

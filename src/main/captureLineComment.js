@@ -1,4 +1,4 @@
-function captureLineComment(p) {
+module.exports = function captureLineComment(p) {
   var i = p.i;
   var str = p.str;
 
@@ -11,4 +11,4 @@ function captureLineComment(p) {
   }
 
   p.i = i;
-}
+};

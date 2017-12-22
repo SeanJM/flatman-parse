@@ -1,4 +1,7 @@
-function captureDocType(p) {
+const { SPACE }    = require("../constants/");
+const resetCapture = require("../main/resetCapture");
+
+module.exports = function captureDocType(p) {
   var str = p.str;
   var i = p.i;
 
@@ -65,4 +68,4 @@ function captureDocType(p) {
   });
 
   resetCapture(p);
-}
+};

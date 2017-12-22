@@ -1,4 +1,13 @@
-function parseHtml(str) {
+const { SPACE }        = require("../constants/");
+const isOpenTag        = require("../predicates/isOpenTag");
+const isText           = require("../predicates/isText");
+const isComment        = require("../predicates/isComment");
+const isDocType        = require("../predicates/isDocType");
+const isXmlDeclaration = require("../predicates/isXmlDeclaration");
+const captureDocType   = require("./captureDocType");
+const captureNode      = require("./captureNode");
+
+module.exports = function parseHtml(str) {
   var p = {
     content : '',
     str : str,
@@ -27,4 +36,4 @@ function parseHtml(str) {
   }
 
   return p.nodes;
-}
+};

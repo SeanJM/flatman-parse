@@ -1,8 +1,6 @@
-function isRegExp(p) {
-  var p1 = p.str[p.i];
-  var p2 = p.str[p.i + 1];
-
-  var i = p.i;
+module.exports = function isRegExp(p) {
+  var p1  = p.str[p.i];
+  var i   = p.i;
   var str = p.str;
 
   return (
@@ -13,4 +11,4 @@ function isRegExp(p) {
       || str[i - 1] === ' ' && str[i - 2] === '='
     )
   );
-}
+};
