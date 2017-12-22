@@ -1,3 +1,17 @@
+const isStringQuote       = require("../predicates/isStringQuote");
+const isLineComment       = require("../predicates/isLineComment");
+const isBlockComment      = require("../predicates/isBlockComment");
+const isRegExp            = require("../predicates/isRegExp");
+const isOpenTag           = require("../predicates/isOpenTag");
+const isClosedTag         = require("../predicates/isClosedTag");
+
+const captureString       = require("./captureString");
+const captureLineComment  = require("./captureLineComment");
+const captureBlockComment = require("./captureBlockComment");
+const captureRegExp       = require("./captureRegExp");
+
+const resetCapture        = require("./resetCapture");
+
 module.exports = function captureText(p) {
   var capture = true;
   var temp;

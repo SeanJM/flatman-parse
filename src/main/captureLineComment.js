@@ -5,7 +5,7 @@ module.exports = function captureLineComment(p) {
   p.content += str[i] + str[i + 1];
   i += 2;
 
-  while (str[i] !== '\n' && str[i]) {
+  while (str[i] !== "\n" && str[i]) {
     p.content += str[i];
     i += 1;
   }

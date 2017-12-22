@@ -1,10 +1,13 @@
+const { XML_END, SPACE, QUOTE } = require("../constants/");
+const resetCapture = require("./resetCapture");
+
 module.exports = function captureXmlDeclaration(p) {
   var node = {
-    tagName : 'xml',
+    tagName : "xml",
     attributes : {}
   };
 
-  var attr = '';
+  var attr = "";
   var temp = [];
   var str = p.str;
   var i = p.i;
@@ -16,7 +19,7 @@ module.exports = function captureXmlDeclaration(p) {
     i += 1;
 
     if (SPACE[str[i]] || XML_END[str[i - 1] + str[i]]) {
-      temp = attr.split('=');
+      temp = attr.split("=");
 
       while (!QUOTE[temp[1][0]]) {
         temp[1] = temp[1].substring(1);
@@ -28,7 +31,7 @@ module.exports = function captureXmlDeclaration(p) {
 
       temp[1] = temp[1].substring(1, temp[1].length - 1);
       node.attributes[temp[0]] = temp[1];
-      attr = '';
+      attr = "";
     }
 
     while (SPACE[str[i]] && str[i]) {

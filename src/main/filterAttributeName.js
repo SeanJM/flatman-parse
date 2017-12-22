@@ -1,5 +1,5 @@
 module.exports = function filterAttributeName(name) {
-  return name === 'class'
-    ? 'className'
+  return name === "class"
+    ? "className"
     : name;
 };

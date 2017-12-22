@@ -1,5 +1,7 @@
+const filterAttributeStyle = require("./filterAttributeStyle");
+
 module.exports = function filterAttributeValue(name, value) {
-  if (name === 'style') {
+  if (name === "style") {
     return filterAttributeStyle(value);
   }
 

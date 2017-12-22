@@ -1,11 +1,14 @@
-const { SPACE }        = require("../constants/");
-const isOpenTag        = require("../predicates/isOpenTag");
-const isText           = require("../predicates/isText");
-const isComment        = require("../predicates/isComment");
-const isDocType        = require("../predicates/isDocType");
-const isXmlDeclaration = require("../predicates/isXmlDeclaration");
-const captureDocType   = require("./captureDocType");
-const captureNode      = require("./captureNode");
+const { SPACE }             = require("../constants/");
+const isOpenTag             = require("../predicates/isOpenTag");
+const isText                = require("../predicates/isText");
+const isComment             = require("../predicates/isComment");
+const isDocType             = require("../predicates/isDocType");
+const isXmlDeclaration      = require("../predicates/isXmlDeclaration");
+const captureDocType        = require("./captureDocType");
+const captureNode           = require("./captureNode");
+const captureText           = require("./captureText");
+const captureComment        = require("./captureComment");
+const captureXmlDeclaration = require("./captureXmlDeclaration");
 
 module.exports = function parseHtml(str) {
   var p = {

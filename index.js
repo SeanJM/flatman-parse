@@ -91,6 +91,9 @@ var isDocType = __webpack_require__(6);
 var isXmlDeclaration = __webpack_require__(7);
 var captureDocType = __webpack_require__(8);
 var captureNode = __webpack_require__(10);
+var captureText = __webpack_require__(24);
+var captureComment = __webpack_require__(25);
+var captureXmlDeclaration = __webpack_require__(26);
 
 module.exports = function parseHtml(str) {
   var p = {
@@ -341,15 +344,15 @@ module.exports = function captureDocType(p) {
   var str = p.str;
   var i = p.i;
 
-  var rootElement = '';
-  var type = '';
-  var publicIdentifier = '';
-  var privateIdentifier = '';
+  var rootElement = "";
+  var type = "";
+  var publicIdentifier = "";
+  var privateIdentifier = "";
   var stringChar;
 
   i += 10; // Offset doctype
 
-  while (!SPACE[str[i]] && str[i] !== '>' && str[i]) {
+  while (!SPACE[str[i]] && str[i] !== ">" && str[i]) {
     rootElement += str[i];
     i += 1;
   }
@@ -358,13 +361,13 @@ module.exports = function captureDocType(p) {
     i += 1;
   }
 
-  while (!SPACE[str[i]] && str[i] !== '>' && str[i]) {
+  while (!SPACE[str[i]] && str[i] !== ">" && str[i]) {
     type += str[i];
     i += 1;
   }
 
-  if (str[i] !== '>') {
-    while (str[i] !== '\'' && str[i] !== '\"' && str[i]) {
+  if (str[i] !== ">") {
+    while (str[i] !== "'" && str[i] !== "\"" && str[i]) {
       i += 1;
     }
 
@@ -377,7 +380,7 @@ module.exports = function captureDocType(p) {
     }
     i += 1;
 
-    while (str[i] !== '\'' && str[i] !== '\"' && str[i]) {
+    while (str[i] !== "'" && str[i] !== "\"" && str[i]) {
       i += 1;
     }
 
@@ -389,14 +392,14 @@ module.exports = function captureDocType(p) {
       i += 1;
     }
 
-    while (str[i] !== '>' && str[i]) {
+    while (str[i] !== ">" && str[i]) {
       i += 1;
     }
   }
 
   p.i = i;
   p.nodes.push({
-    tagName: 'doctype',
+    tagName: "doctype",
     rootElement: rootElement,
     type: type.length ? type.toLowerCase() : undefined,
     publicIdentifier: publicIdentifier.length ? publicIdentifier : undefined,
@@ -631,7 +634,7 @@ module.exports = function captureString(p) {
   i += 1;
 
   for (; !isEnd && str[i]; i++) {
-    isEnd = str.substring(i - 3, i) === '\\\\' + stringChar || str[i] === stringChar && str[i - 1] !== '\\';
+    isEnd = str.substring(i - 3, i) === "\\\\" + stringChar || str[i] === stringChar && str[i - 1] !== "\\";
 
     p.content += str[i];
   }
@@ -666,7 +669,7 @@ module.exports = function captureLineComment(p) {
   p.content += str[i] + str[i + 1];
   i += 2;
 
-  while (str[i] !== '\n' && str[i]) {
+  while (str[i] !== "\n" && str[i]) {
     p.content += str[i];
     i += 1;
   }
@@ -749,7 +752,7 @@ module.exports = function captureRegExp(p) {
   i += 1;
 
   for (; !isEnd && str[i]; i++) {
-    isEnd = str[i] === '/' && str[i - 1] !== '\\';
+    isEnd = str[i] === "/" && str[i - 1] !== "\\";
     p.content += str[i];
   }
 
@@ -798,7 +801,7 @@ module.exports = function isSelfClosingTag(p) {
 
 
 module.exports = function filterAttributeName(name) {
-  return name === 'class' ? 'className' : name;
+  return name === "class" ? "className" : name;
 };
 
 /***/ }),
@@ -808,12 +811,204 @@ module.exports = function filterAttributeName(name) {
 "use strict";
 
 
+var filterAttributeStyle = __webpack_require__(27);
+
 module.exports = function filterAttributeValue(name, value) {
-  if (name === 'style') {
+  if (name === "style") {
     return filterAttributeStyle(value);
   }
 
   return value;
+};
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var isStringQuote = __webpack_require__(12);
+var isLineComment = __webpack_require__(14);
+var isBlockComment = __webpack_require__(18);
+var isRegExp = __webpack_require__(20);
+var isOpenTag = __webpack_require__(3);
+var isClosedTag = __webpack_require__(17);
+
+var captureString = __webpack_require__(13);
+var captureLineComment = __webpack_require__(15);
+var captureBlockComment = __webpack_require__(16);
+var captureRegExp = __webpack_require__(19);
+
+var resetCapture = __webpack_require__(9);
+
+module.exports = function captureText(p) {
+  var capture = true;
+  var temp;
+
+  while (p.i < p.length && capture) {
+    if (isStringQuote(p)) {
+      captureString(p);
+    }
+
+    if (isLineComment(p)) {
+      captureLineComment(p);
+    }
+
+    if (isBlockComment(p)) {
+      captureBlockComment(p);
+    }
+
+    if (isRegExp(p)) {
+      captureRegExp(p);
+    }
+
+    if (isOpenTag(p) || isClosedTag(p)) {
+      capture = false;
+    } else {
+      p.i += 1;
+    }
+  }
+
+  p.i -= 1;
+
+  temp = p.str.substring(p.anchor, p.i + 1);
+
+  if (temp.trim()) {
+    p.nodes.push(temp);
+  }
+
+  resetCapture(p);
+};
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var resetCapture = __webpack_require__(9);
+
+module.exports = function captureComment(p) {
+  var value = "";
+
+  p.i += 4;
+
+  while (p.str.substring(p.i, p.i + 3) !== "-->" && p.str[p.i]) {
+    value += p.str[p.i];
+    p.i += 1;
+  }
+
+  p.i += 3;
+
+  p.nodes.push({
+    tagName: "comment",
+    value: value
+  });
+
+  resetCapture(p);
+};
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _require = __webpack_require__(2),
+    XML_END = _require.XML_END,
+    SPACE = _require.SPACE,
+    QUOTE = _require.QUOTE;
+
+var resetCapture = __webpack_require__(9);
+
+module.exports = function captureXmlDeclaration(p) {
+  var node = {
+    tagName: "xml",
+    attributes: {}
+  };
+
+  var attr = "";
+  var temp = [];
+  var str = p.str;
+  var i = p.i;
+
+  i += 6; // Offset
+
+  while (!XML_END[str[i - 1] + str[i]] && str[i]) {
+    attr += str[i];
+    i += 1;
+
+    if (SPACE[str[i]] || XML_END[str[i - 1] + str[i]]) {
+      temp = attr.split("=");
+
+      while (!QUOTE[temp[1][0]]) {
+        temp[1] = temp[1].substring(1);
+      }
+
+      while (!QUOTE[temp[1][temp[1].length - 1]]) {
+        temp[1] = temp[1].substring(0, temp[1].length - 1);
+      }
+
+      temp[1] = temp[1].substring(1, temp[1].length - 1);
+      node.attributes[temp[0]] = temp[1];
+      attr = "";
+    }
+
+    while (SPACE[str[i]] && str[i]) {
+      i += 1;
+    }
+  }
+
+  p.i = i;
+  p.nodes.push(node);
+  resetCapture(p);
+};
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var camelCase = __webpack_require__(28);
+
+module.exports = function filterAttributeStyle(style) {
+  var obj = {};
+  var each = style.split(";");
+  var styleTemp;
+
+  for (var i = 0, n = each.length; i < n; i++) {
+    if (each[i].length) {
+      styleTemp = each[i].split(":");
+      obj[camelCase(styleTemp[0].trim())] = styleTemp.slice(1, n).join(":").trim();
+    }
+  }
+
+  return obj;
+};
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function camelCase(str) {
+  var split = str.split("-");
+  for (var i = 0, n = split.length; i < n; i++) {
+    if (i === 0) {
+      split[i] = split[i].toLowerCase();
+    } else {
+      split[i] = split[i][0].toUpperCase() + split[i].slice(1).toLowerCase();
+    }
+  }
+
+  return split.join("");
 };
 
 /***/ })

@@ -1,5 +1,5 @@
 module.exports = function camelCase(str) {
-  var split = str.split('-');
+  var split = str.split("-");
   for (var i = 0, n = split.length; i < n; i++) {
     if (i === 0) {
       split[i] = split[i].toLowerCase();
@@ -8,5 +8,5 @@ module.exports = function camelCase(str) {
     }
   }
 
-  return split.join('');
+  return split.join("");
 };

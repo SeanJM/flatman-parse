@@ -9,11 +9,11 @@ module.exports = function captureString(p) {
 
   for (; !isEnd && str[i]; i++) {
     isEnd = ((
-      str.substring(i - 3, i) === '\\\\' + stringChar
+      str.substring(i - 3, i) === "\\\\" + stringChar
     ) || (
-      str[i] === stringChar
-      && str[i - 1] !== '\\'
-    ));
+        str[i] === stringChar
+      && str[i - 1] !== "\\"
+      ));
 
     p.content += str[i];
   }

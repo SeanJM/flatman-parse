@@ -7,7 +7,7 @@ module.exports = function captureRegExp(p) {
   i += 1;
 
   for (; !isEnd && str[i]; i++) {
-    isEnd = str[i] === '/' && str[i - 1] !== '\\';
+    isEnd = str[i] === "/" && str[i - 1] !== "\\";
     p.content += str[i];
   }
 
