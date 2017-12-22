@@ -82,22 +82,120 @@ module.exports = parseHtml;
 
 
 var _require = __webpack_require__(2),
-    SPACE = _require.SPACE;
+    SPACE = _require.SPACE,
+    SELF_CLOSING = _require.SELF_CLOSING;
 
 var isOpenTag = __webpack_require__(3);
 var isText = __webpack_require__(4);
 var isComment = __webpack_require__(5);
 var isDocType = __webpack_require__(6);
 var isXmlDeclaration = __webpack_require__(7);
-var captureDocType = __webpack_require__(8);
-var captureNode = __webpack_require__(10);
-var captureText = __webpack_require__(24);
-var captureComment = __webpack_require__(25);
-var captureXmlDeclaration = __webpack_require__(26);
 
-module.exports = function parseHtml(str) {
+var captureComment = __webpack_require__(25);
+var captureDocType = __webpack_require__(8);
+var clearString = __webpack_require__(37);
+var captureText = __webpack_require__(24);
+var captureXmlDeclaration = __webpack_require__(26);
+var clearBlockComment = __webpack_require__(35);
+var clearComment = __webpack_require__(33);
+var clearLineComment = __webpack_require__(36);
+var clearRegExp = __webpack_require__(34);
+var getNode = __webpack_require__(11);
+var resetCapture = __webpack_require__(9);
+
+var isBlockComment = __webpack_require__(18);
+var isClosedTag = __webpack_require__(17);
+var isOpenComment = __webpack_require__(31);
+var isLineComment = __webpack_require__(14);
+var isRegExp = __webpack_require__(20);
+var isSelfClosingTag = __webpack_require__(21);
+var isStringQuote = __webpack_require__(12);
+
+function captureNode(p) {
+  var hasSlash = false;
+  var capture = true;
+  var innerTag = "";
+  var node;
+
+  // Get inner tag
+  p.open += 1;
+  p.i += 1;
+
+  while (p.str[p.i] !== ">" && p.str[p.i]) {
+    innerTag += p.str[p.i];
+    p.i += 1;
+  }
+
+  if (innerTag[innerTag.length - 1] === "/") {
+    innerTag = innerTag.substring(0, innerTag.length - 1);
+    hasSlash = true;
+  }
+
+  p.i += 1;
+  node = getNode(innerTag);
+  innerTag = "";
+
+  if (hasSlash && SELF_CLOSING[node.tagName] || SELF_CLOSING[node.tagName]) {
+    capture = false;
+    p.nodes.push(node);
+    resetCapture(p);
+    p.i -= 1;
+  } else if (hasSlash) {
+    throw new Error("Tag: '" + node.tagName + "' is not a self closing tag.");
+  }
+
+  while (p.i < p.length && capture) {
+    if (isStringQuote(p)) {
+      clearString(p);
+    }
+
+    if (isLineComment(p)) {
+      clearLineComment(p);
+    }
+
+    if (isBlockComment(p)) {
+      clearBlockComment(p);
+    }
+
+    if (isRegExp(p)) {
+      clearRegExp(p);
+    }
+
+    if (isOpenComment(p)) {
+      clearComment(p);
+    }
+
+    if (isSelfClosingTag(p)) {
+      p.open += 1;
+      p.closed += 1;
+    } else if (isOpenTag(p)) {
+      p.open += 1;
+    }if (isClosedTag(p)) {
+      p.closed += 1;
+    }
+
+    if (p.open - p.closed === 0) {
+      node.childNodes = parseHtml(p.content);
+      p.nodes.push(node);
+
+      // Go to the end of the closed tag
+      p.i = p.str.indexOf(">", p.i);
+      p.i -= 1;
+      resetCapture(p);
+      capture = false;
+    }
+
+    if (p.open > p.closed) {
+      p.content += p.str[p.i];
+    }
+
+    p.i += 1;
+  }
+}
+
+function parseHtml(str) {
   var p = {
-    content: '',
+    content: "",
     str: str,
     i: 0,
     anchor: 0,
@@ -124,7 +222,9 @@ module.exports = function parseHtml(str) {
   }
 
   return p.nodes;
-};
+}
+
+module.exports = parseHtml;
 
 /***/ }),
 /* 2 */
@@ -424,110 +524,7 @@ module.exports = function resetCapture(p) {
 };
 
 /***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _require = __webpack_require__(2),
-    SELF_CLOSING = _require.SELF_CLOSING;
-
-var getNode = __webpack_require__(11);
-var captureString = __webpack_require__(13);
-var captureBlockComment = __webpack_require__(16);
-var captureLineComment = __webpack_require__(15);
-var resetCapture = __webpack_require__(9);
-var captureRegExp = __webpack_require__(19);
-
-var isRegExp = __webpack_require__(20);
-var isSelfClosingTag = __webpack_require__(21);
-var isOpenTag = __webpack_require__(3);
-var isClosedTag = __webpack_require__(17);
-var parseHtml = __webpack_require__(1);
-var isStringQuote = __webpack_require__(12);
-var isBlockComment = __webpack_require__(18);
-var isLineComment = __webpack_require__(14);
-
-module.exports = function captureNode(p) {
-  var hasSlash = false;
-  var capture = true;
-  var innerTag = "";
-  var node;
-
-  // Get inner tag
-  p.open += 1;
-  p.i += 1;
-
-  while (p.str[p.i] !== ">" && p.str[p.i]) {
-    innerTag += p.str[p.i];
-    p.i += 1;
-  }
-
-  if (innerTag[innerTag.length - 1] === "/") {
-    innerTag = innerTag.substring(0, innerTag.length - 1);
-    hasSlash = true;
-  }
-
-  p.i += 1;
-  node = getNode(innerTag);
-  innerTag = "";
-
-  if (hasSlash && SELF_CLOSING[node.tagName] || SELF_CLOSING[node.tagName]) {
-    capture = false;
-    p.nodes.push(node);
-    resetCapture(p);
-    p.i -= 1;
-  } else if (hasSlash) {
-    throw new Error("Tag: '" + node.tagName + "' is not a self closing tag.");
-  }
-
-  while (p.i < p.length && capture) {
-    if (isStringQuote(p)) {
-      captureString(p);
-    }
-
-    if (isLineComment(p)) {
-      captureLineComment(p);
-    }
-
-    if (isBlockComment(p)) {
-      captureBlockComment(p);
-    }
-
-    if (isRegExp(p)) {
-      captureRegExp(p);
-    }
-
-    if (isSelfClosingTag(p)) {
-      p.open += 1;
-      p.closed += 1;
-    } else if (isOpenTag(p)) {
-      p.open += 1;
-    }if (isClosedTag(p)) {
-      p.closed += 1;
-    }
-
-    if (p.open - p.closed === 0) {
-      node.childNodes = parseHtml(p.content);
-      p.nodes.push(node);
-
-      // Go to the end of the closed tag
-      p.i = p.str.indexOf(">", p.i);
-      p.i -= 1;
-      resetCapture(p);
-      capture = false;
-    }
-
-    if (p.open > p.closed) {
-      p.content += p.str[p.i];
-    }
-
-    p.i += 1;
-  }
-};
-
-/***/ }),
+/* 10 */,
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -618,100 +615,25 @@ module.exports = function isStringQuote(p) {
 };
 
 /***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = function captureString(p) {
-  var stringChar = p.str[p.i];
-  var isEnd = false;
-  var str = p.str;
-  var i = p.i;
-
-  p.content += str[i];
-  i += 1;
-
-  for (; !isEnd && str[i]; i++) {
-    isEnd = str.substring(i - 3, i) === "\\\\" + stringChar || str[i] === stringChar && str[i - 1] !== "\\";
-
-    p.content += str[i];
-  }
-
-  p.i = i;
-};
-
-/***/ }),
+/* 13 */,
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+var _require = __webpack_require__(2),
+    SPACE = _require.SPACE;
+
 module.exports = function isLineComment(p) {
   var i = p.i;
   var str = p.str;
-  return str[i] + str[i + 1] === '//' && SPACE[str[i - 1]];
+  return str[i] + str[i + 1] === "//" && SPACE[str[i - 1]];
 };
 
 /***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = function captureLineComment(p) {
-  var i = p.i;
-  var str = p.str;
-
-  p.content += str[i] + str[i + 1];
-  i += 2;
-
-  while (str[i] !== "\n" && str[i]) {
-    p.content += str[i];
-    i += 1;
-  }
-
-  p.i = i;
-};
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var isOpenTag = __webpack_require__(3);
-var isClosedTag = __webpack_require__(17);
-
-module.exports = function captureBlockComment(p) {
-  var isEnd = false;
-  var init = p.i;
-  var i = p.i;
-  var str = p.str;
-
-  p.content += str[i];
-  i += 1;
-
-  for (; !isEnd && str[i]; i++) {
-    isEnd = str[i - 1] + str[i] === "*/";
-    p.content += str[i];
-  }
-
-  if (!isEnd) {
-    while (!isOpenTag(p) && !isClosedTag(p) && i > init) {
-      p.content = str.substring(init, i);
-      i -= 1;
-    }
-  }
-
-  p.i = i;
-};
-
-/***/ }),
+/* 15 */,
+/* 16 */,
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -733,33 +655,11 @@ module.exports = function isClosedTag(p) {
 module.exports = function isBlockComment(p) {
   var i = p.i;
   var str = p.str;
-  return str[i] + str[i + 1] === '/*';
+  return str[i] + str[i + 1] === "/*";
 };
 
 /***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = function captureRegExp(p) {
-  var isEnd = false;
-  var str = p.str;
-  var i = p.i;
-
-  p.content += str[i];
-  i += 1;
-
-  for (; !isEnd && str[i]; i++) {
-    isEnd = str[i] === "/" && str[i - 1] !== "\\";
-    p.content += str[i];
-  }
-
-  p.i = i;
-};
-
-/***/ }),
+/* 19 */,
 /* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -835,10 +735,10 @@ var isRegExp = __webpack_require__(20);
 var isOpenTag = __webpack_require__(3);
 var isClosedTag = __webpack_require__(17);
 
-var captureString = __webpack_require__(13);
-var captureLineComment = __webpack_require__(15);
-var captureBlockComment = __webpack_require__(16);
-var captureRegExp = __webpack_require__(19);
+var clearString = __webpack_require__(37);
+var clearLineComment = __webpack_require__(36);
+var clearBlockComment = __webpack_require__(35);
+var clearRegExp = __webpack_require__(34);
 
 var resetCapture = __webpack_require__(9);
 
@@ -848,19 +748,19 @@ module.exports = function captureText(p) {
 
   while (p.i < p.length && capture) {
     if (isStringQuote(p)) {
-      captureString(p);
+      clearString(p);
     }
 
     if (isLineComment(p)) {
-      captureLineComment(p);
+      clearLineComment(p);
     }
 
     if (isBlockComment(p)) {
-      captureBlockComment(p);
+      clearBlockComment(p);
     }
 
     if (isRegExp(p)) {
-      captureRegExp(p);
+      clearRegExp(p);
     }
 
     if (isOpenTag(p) || isClosedTag(p)) {
@@ -891,12 +791,12 @@ module.exports = function captureText(p) {
 var resetCapture = __webpack_require__(9);
 
 module.exports = function captureComment(p) {
-  var value = "";
+  var childNodes = "";
 
   p.i += 4;
 
   while (p.str.substring(p.i, p.i + 3) !== "-->" && p.str[p.i]) {
-    value += p.str[p.i];
+    childNodes += p.str[p.i];
     p.i += 1;
   }
 
@@ -904,7 +804,7 @@ module.exports = function captureComment(p) {
 
   p.nodes.push({
     tagName: "comment",
-    value: value
+    childNodes: childNodes.split("\n")
   });
 
   resetCapture(p);
@@ -1009,6 +909,142 @@ module.exports = function camelCase(str) {
   }
 
   return split.join("");
+};
+
+/***/ }),
+/* 29 */,
+/* 30 */,
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function isOpenComment(p) {
+  return p.str.substring(p.i, p.i + 4) === "<!--";
+};
+
+/***/ }),
+/* 32 */,
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function clearComment(p) {
+  while (p.str.substring(p.i, p.i + 3) !== "-->" && p.str[p.i]) {
+    p.content += p.str[p.i];
+    p.i += 1;
+  }
+  while (p.str[p.i] !== ">") {
+    p.content += p.str[p.i];
+    p.i += 1;
+  }
+};
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function clearRegExp(p) {
+  var isEnd = false;
+  var str = p.str;
+  var i = p.i;
+
+  p.content += str[i];
+  i += 1;
+
+  for (; !isEnd && str[i]; i++) {
+    isEnd = str[i] === "/" && str[i - 1] !== "\\";
+    p.content += str[i];
+  }
+
+  p.i = i;
+};
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var isOpenTag = __webpack_require__(3);
+var isClosedTag = __webpack_require__(17);
+
+module.exports = function clearBlockComment(p) {
+  var isEnd = false;
+  var init = p.i;
+  var i = p.i;
+  var str = p.str;
+
+  p.content += str[i];
+  i += 1;
+
+  for (; !isEnd && str[i]; i++) {
+    isEnd = str[i - 1] + str[i] === "*/";
+    p.content += str[i];
+  }
+
+  if (!isEnd) {
+    while (!isOpenTag(p) && !isClosedTag(p) && i > init) {
+      p.content = str.substring(init, i);
+      i -= 1;
+    }
+  }
+
+  p.i = i;
+};
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function clearLineComment(p) {
+  var i = p.i;
+  var str = p.str;
+
+  p.content += str[i] + str[i + 1];
+  i += 2;
+
+  while (str[i] !== "\n" && str[i]) {
+    p.content += str[i];
+    i += 1;
+  }
+
+  p.i = i;
+};
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function clearString(p) {
+  var stringChar = p.str[p.i];
+  var isEnd = false;
+  var str = p.str;
+  var i = p.i;
+
+  p.content += str[i];
+  i += 1;
+
+  for (; !isEnd && str[i]; i++) {
+    isEnd = str.substring(i - 3, i) === "\\\\" + stringChar || str[i] === stringChar && str[i - 1] !== "\\";
+
+    p.content += str[i];
+  }
+
+  p.i = i;
 };
 
 /***/ })

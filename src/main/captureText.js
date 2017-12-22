@@ -5,10 +5,10 @@ const isRegExp            = require("../predicates/isRegExp");
 const isOpenTag           = require("../predicates/isOpenTag");
 const isClosedTag         = require("../predicates/isClosedTag");
 
-const captureString       = require("./captureString");
-const captureLineComment  = require("./captureLineComment");
-const captureBlockComment = require("./captureBlockComment");
-const captureRegExp       = require("./captureRegExp");
+const clearString         = require("./clearString");
+const clearLineComment    = require("./clearLineComment");
+const clearBlockComment   = require("./clearBlockComment");
+const clearRegExp         = require("./clearRegExp");
 
 const resetCapture        = require("./resetCapture");
 
@@ -18,19 +18,19 @@ module.exports = function captureText(p) {
 
   while (p.i < p.length && capture) {
     if (isStringQuote(p)) {
-      captureString(p);
+      clearString(p);
     }
 
     if (isLineComment(p)) {
-      captureLineComment(p);
+      clearLineComment(p);
     }
 
     if (isBlockComment(p)) {
-      captureBlockComment(p);
+      clearBlockComment(p);
     }
 
     if (isRegExp(p)) {
-      captureRegExp(p);
+      clearRegExp(p);
     }
 
     if (isOpenTag(p) || isClosedTag(p)) {
