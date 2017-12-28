@@ -18,7 +18,7 @@ module.exports = function isMaybeSelfClosingTag(p) {
       while (str[i] !== ">" && str[i]) {
         i += 1;
       }
-      return str.substring(i - 1, i) !== "/>";
+      return str.substring(i - 1, i + 1) === "/>";
     }
   }
 

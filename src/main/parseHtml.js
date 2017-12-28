@@ -9,11 +9,13 @@ const captureComment          = require("./captureComment");
 const captureDocType          = require("./captureDocType");
 const captureText             = require("./captureText");
 const captureXmlDeclaration   = require("./captureXmlDeclaration");
+
 const clearBlockComment       = require("./clearBlockComment");
 const clearComment            = require("./clearComment");
 const clearLineComment        = require("./clearLineComment");
 const clearRegExp             = require("./clearRegExp");
 const clearString             = require("./clearString");
+
 const getNode                 = require("./getNode");
 const resetCapture            = require("./resetCapture");
 
@@ -50,12 +52,12 @@ function captureNode(p) {
   node = getNode(innerTag);
   innerTag = "";
 
-  if (hasSlash && SELF_CLOSING[node.tagName] || SELF_CLOSING[node.tagName] || MAYBE_SELF_CLOSING[node.tagName]) {
+  if (hasSlash && (SELF_CLOSING[node.tagName] || MAYBE_SELF_CLOSING[node.tagName]) || SELF_CLOSING[node.tagName]) {
     capture = false;
     p.nodes.push(node);
     resetCapture(p);
     p.i -= 1;
-  } else if (hasSlash) {
+  } else if (hasSlash && !MAYBE_SELF_CLOSING[node.tagName]) {
     throw new Error("Tag: '" + node.tagName + "' is not a self closing tag.");
   }
 

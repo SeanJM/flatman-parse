@@ -126,18 +126,16 @@ var SELF_CLOSING = {
   keygen: true,
   source: true,
 
-  command: true,
-
-  // SVGs
-  circle: true,
-  ellipse: true,
-  rect: true,
-  path: true,
-  polygon: true
+  command: true
 };
 
 var MAYBE_SELF_CLOSING = {
   // SVGs
+  ellipse: true,
+  rect: true,
+  path: true,
+  polygon: true,
+  circle: true,
   use: true
 };
 
@@ -262,6 +260,67 @@ module.exports = function isClosedTag(p) {
 "use strict";
 
 
+var _require = __webpack_require__(0),
+    IS_LETTER = _require.IS_LETTER;
+
+module.exports = function isStringQuote(p) {
+  var str = p.str[p.i];
+  var before = p.str[p.i - 1];
+
+  return (str === "'" || str === "\"" || str === "`") && !IS_LETTER[before];
+};
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _require = __webpack_require__(0),
+    SPACE = _require.SPACE;
+
+module.exports = function isLineComment(p) {
+  var i = p.i;
+  var str = p.str;
+  return str[i] + str[i + 1] === "//" && SPACE[str[i - 1]];
+};
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function isBlockComment(p) {
+  var i = p.i;
+  var str = p.str;
+  return str[i] + str[i + 1] === "/*";
+};
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function isRegExp(p) {
+  var p1 = p.str[p.i];
+  var i = p.i;
+  var str = p.str;
+
+  return p1 === '/' && (str[i - 1] === '(' || str[i - 1] === '=' || str[i - 1] === ' ' && str[i - 2] === '=');
+};
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 module.exports = function clearString(p) {
   var stringChar = p.str[p.i];
   var isEnd = false;
@@ -278,67 +337,6 @@ module.exports = function clearString(p) {
   }
 
   p.i = i;
-};
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _require = __webpack_require__(0),
-    IS_LETTER = _require.IS_LETTER;
-
-module.exports = function isStringQuote(p) {
-  var str = p.str[p.i];
-  var before = p.str[p.i - 1];
-
-  return (str === "'" || str === "\"" || str === "`") && !IS_LETTER[before];
-};
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _require = __webpack_require__(0),
-    SPACE = _require.SPACE;
-
-module.exports = function isLineComment(p) {
-  var i = p.i;
-  var str = p.str;
-  return str[i] + str[i + 1] === "//" && SPACE[str[i - 1]];
-};
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = function isBlockComment(p) {
-  var i = p.i;
-  var str = p.str;
-  return str[i] + str[i + 1] === "/*";
-};
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = function isRegExp(p) {
-  var p1 = p.str[p.i];
-  var i = p.i;
-  var str = p.str;
-
-  return p1 === '/' && (str[i - 1] === '(' || str[i - 1] === '=' || str[i - 1] === ' ' && str[i - 2] === '=');
 };
 
 /***/ }),
@@ -452,22 +450,24 @@ var captureComment = __webpack_require__(18);
 var captureDocType = __webpack_require__(19);
 var captureText = __webpack_require__(20);
 var captureXmlDeclaration = __webpack_require__(21);
+
 var clearBlockComment = __webpack_require__(10);
 var clearComment = __webpack_require__(22);
 var clearLineComment = __webpack_require__(9);
 var clearRegExp = __webpack_require__(11);
-var clearString = __webpack_require__(4);
+var clearString = __webpack_require__(8);
+
 var getNode = __webpack_require__(23);
 var resetCapture = __webpack_require__(1);
 
-var isBlockComment = __webpack_require__(7);
-var isMaybeSelfClosingTag = __webpack_require__(32);
+var isBlockComment = __webpack_require__(6);
+var isMaybeSelfClosingTag = __webpack_require__(28);
 var isClosedTag = __webpack_require__(3);
-var isOpenComment = __webpack_require__(28);
-var isLineComment = __webpack_require__(6);
-var isRegExp = __webpack_require__(8);
-var isSelfClosingTag = __webpack_require__(29);
-var isStringQuote = __webpack_require__(5);
+var isOpenComment = __webpack_require__(29);
+var isLineComment = __webpack_require__(5);
+var isRegExp = __webpack_require__(7);
+var isSelfClosingTag = __webpack_require__(30);
+var isStringQuote = __webpack_require__(4);
 
 function captureNode(p) {
   var hasSlash = false;
@@ -493,12 +493,12 @@ function captureNode(p) {
   node = getNode(innerTag);
   innerTag = "";
 
-  if (hasSlash && SELF_CLOSING[node.tagName] || SELF_CLOSING[node.tagName] || MAYBE_SELF_CLOSING[node.tagName]) {
+  if (hasSlash && (SELF_CLOSING[node.tagName] || MAYBE_SELF_CLOSING[node.tagName]) || SELF_CLOSING[node.tagName]) {
     capture = false;
     p.nodes.push(node);
     resetCapture(p);
     p.i -= 1;
-  } else if (hasSlash) {
+  } else if (hasSlash && !MAYBE_SELF_CLOSING[node.tagName]) {
     throw new Error("Tag: '" + node.tagName + "' is not a self closing tag.");
   }
 
@@ -756,14 +756,14 @@ module.exports = function captureDocType(p) {
 "use strict";
 
 
-var isStringQuote = __webpack_require__(5);
-var isLineComment = __webpack_require__(6);
-var isBlockComment = __webpack_require__(7);
-var isRegExp = __webpack_require__(8);
+var isStringQuote = __webpack_require__(4);
+var isLineComment = __webpack_require__(5);
+var isBlockComment = __webpack_require__(6);
+var isRegExp = __webpack_require__(7);
 var isOpenTag = __webpack_require__(2);
 var isClosedTag = __webpack_require__(3);
 
-var clearString = __webpack_require__(4);
+var clearString = __webpack_require__(8);
 var clearLineComment = __webpack_require__(9);
 var clearBlockComment = __webpack_require__(10);
 var clearRegExp = __webpack_require__(11);
@@ -1036,38 +1036,6 @@ module.exports = function camelCase(str) {
 "use strict";
 
 
-module.exports = function isOpenComment(p) {
-  return p.str.substring(p.i, p.i + 4) === "<!--";
-};
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _require = __webpack_require__(0),
-    SELF_CLOSING = _require.SELF_CLOSING,
-    SPACE = _require.SPACE,
-    GT = _require.GT;
-
-module.exports = function isSelfClosingTag(p) {
-  var i = p.i;
-  var str = p.str.substring(i + 1, i + 9).toLowerCase();
-
-  return SELF_CLOSING[str.substring(0, 2)] && (GT[str[2]] || SPACE[str[2]]) || SELF_CLOSING[str.substring(0, 3)] && (GT[str[3]] || SPACE[str[3]]) || SELF_CLOSING[str.substring(0, 4)] && (GT[str[4]] || SPACE[str[4]]) || SELF_CLOSING[str.substring(0, 5)] && (GT[str[5]] || SPACE[str[5]]) || SELF_CLOSING[str.substring(0, 6)] && (GT[str[6]] || SPACE[str[6]]) || SELF_CLOSING[str.substring(0, 7)] && (GT[str[7]] || SPACE[str[7]]) || SELF_CLOSING[str] && (GT[str[2]] || SPACE[str[2]]);
-};
-
-/***/ }),
-/* 30 */,
-/* 31 */,
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 var _require = __webpack_require__(0),
     MAYBE_SELF_CLOSING = _require.MAYBE_SELF_CLOSING,
     IS_LETTER = _require.IS_LETTER,
@@ -1091,11 +1059,41 @@ module.exports = function isMaybeSelfClosingTag(p) {
       while (str[i] !== ">" && str[i]) {
         i += 1;
       }
-      return str.substring(i - 1, i) !== "/>";
+      return str.substring(i - 1, i + 1) === "/>";
     }
   }
 
   return false;
+};
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function isOpenComment(p) {
+  return p.str.substring(p.i, p.i + 4) === "<!--";
+};
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _require = __webpack_require__(0),
+    SELF_CLOSING = _require.SELF_CLOSING,
+    SPACE = _require.SPACE,
+    GT = _require.GT;
+
+module.exports = function isSelfClosingTag(p) {
+  var i = p.i;
+  var str = p.str.substring(i + 1, i + 9).toLowerCase();
+
+  return SELF_CLOSING[str.substring(0, 2)] && (GT[str[2]] || SPACE[str[2]]) || SELF_CLOSING[str.substring(0, 3)] && (GT[str[3]] || SPACE[str[3]]) || SELF_CLOSING[str.substring(0, 4)] && (GT[str[4]] || SPACE[str[4]]) || SELF_CLOSING[str.substring(0, 5)] && (GT[str[5]] || SPACE[str[5]]) || SELF_CLOSING[str.substring(0, 6)] && (GT[str[6]] || SPACE[str[6]]) || SELF_CLOSING[str.substring(0, 7)] && (GT[str[7]] || SPACE[str[7]]) || SELF_CLOSING[str] && (GT[str[2]] || SPACE[str[2]]);
 };
 
 /***/ })

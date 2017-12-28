@@ -54,18 +54,16 @@ const SELF_CLOSING = {
   source : true,
 
   command : true,
-
-  // SVGs
-  circle   : true,
-  ellipse  : true,
-  rect     : true,
-  path     : true,
-  polygon  : true,
 };
 
 const MAYBE_SELF_CLOSING = {
   // SVGs
-  use : true
+  ellipse : true,
+  rect    : true,
+  path    : true,
+  polygon : true,
+  circle  : true,
+  use     : true
 };
 
 const IS_LETTER = {
