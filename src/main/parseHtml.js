@@ -30,7 +30,7 @@ const isStringQuote           = require("../predicates/isStringQuote");
 
 function captureNode(p) {
   var hasSlash = false;
-  var capture = true;
+  var capture  = true;
   var innerTag = "";
   var node;
 
@@ -99,10 +99,10 @@ function captureNode(p) {
       p.nodes.push(node);
 
       // Go to the end of the closed tag
-      p.i = p.str.indexOf(">", p.i);
-      p.i -= 1;
-      resetCapture(p);
+      p.i     = p.str.indexOf(">", p.i);
       capture = false;
+      resetCapture(p);
+      p.i -= 1;
     }
 
     if (p.open > p.closed) {
@@ -125,20 +125,32 @@ function parseHtml(str) {
     nodes   : []
   };
 
-  for (; p.i < p.length; p.i++) {
-    if (!SPACE[p.str[p.i]]) {
-      if (isOpenTag(p)) {
-        captureNode(p);
-      } else if (isText(p)) {
-        captureText(p);
-      } else if (isComment(p)) {
-        captureComment(p);
-      } else if (isDocType(p)) {
-        captureDocType(p);
-      } else if (isXmlDeclaration(p)) {
-        captureXmlDeclaration(p);
-      }
+  while (SPACE[p.str[p.i]] && p.str[p.i]) {
+    p.i += 1;
+  }
+
+  while (p.i < p.length) {
+    if (isOpenTag(p)) {
+      captureNode(p);
     }
+
+    if (isText(p)) {
+      captureText(p);
+    }
+
+    if (isComment(p)) {
+      captureComment(p);
+    }
+
+    if (isDocType(p)) {
+      captureDocType(p);
+    }
+
+    if (isXmlDeclaration(p)) {
+      captureXmlDeclaration(p);
+    }
+
+    p.i += 1;
   }
 
   return p.nodes;

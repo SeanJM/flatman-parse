@@ -13,8 +13,8 @@ const clearRegExp         = require("./clearRegExp");
 const resetCapture        = require("./resetCapture");
 
 module.exports = function captureText(p) {
-  var capture = true;
-  var temp;
+  let capture = true;
+  let temp;
 
   while (p.i < p.length && capture) {
     if (isStringQuote(p)) {
