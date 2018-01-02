@@ -5,7 +5,6 @@ module.exports = {
   this : function () {
     const str = `a<b>b</b>c`;
     const p   = parse(str);
-    console.log(p);
     return p;
   },
   isDeepEqual : function () {

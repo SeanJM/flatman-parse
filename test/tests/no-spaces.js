@@ -5,7 +5,6 @@ module.exports = {
   name : "No spaces",
   this : function () {
     let res = parse(svg);
-    console.log(JSON.stringify(res, null, "  "));
     return res;
   },
   isDeepEqual : function () {

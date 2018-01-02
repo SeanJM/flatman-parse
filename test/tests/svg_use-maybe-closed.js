@@ -37,7 +37,6 @@ module.exports = {
   name : "svg (use maybe closed)",
   this : function () {
     const p = parse(str);
-    console.log(JSON.stringify(p, null, "  "));
     return p;
   },
   isDeepEqual : function () {
