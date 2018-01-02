@@ -1,7 +1,7 @@
 const parse = require("../../src/index.js");
 
 module.exports = {
-  name : "Heading (strong)",
+  name : "String with element sibling",
   this : function () {
     const str = `a<b>b</b>c`;
     const p   = parse(str);
