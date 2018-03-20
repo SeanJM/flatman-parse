@@ -2,6 +2,15 @@ const { SPACE, QUOTE }     = require("../constants/");
 const filterAttributeName  = require("./filterAttributeName");
 const filterAttributeValue = require("./filterAttributeValue");
 
+function isComponent(tagName) {
+  return (
+    tagName[0] &&
+    tagName[1] &&
+    tagName[0].toUpperCase() === tagName[0] &&
+    tagName[1].toLowerCase() === tagName[1]
+  );
+}
+
 module.exports = function getNode(str) {
   var stringChar;
 
@@ -24,7 +33,9 @@ module.exports = function getNode(str) {
     i += 1;
   }
 
-  node.tagName = node.tagName.toLowerCase();
+  if (!isComponent(node.tagName)) {
+    node.tagName = node.tagName.toLowerCase();
+  }
 
   for (; i < n; i++) {
     while (SPACE[str[i]] && str[i]) {
