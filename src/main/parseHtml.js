@@ -52,13 +52,11 @@ function captureNode(p) {
   node = getNode(innerTag);
   innerTag = "";
 
-  if (hasSlash && (SELF_CLOSING[node.tagName] || MAYBE_SELF_CLOSING[node.tagName]) || SELF_CLOSING[node.tagName]) {
+  if (hasSlash || SELF_CLOSING[node.tagName]) {
     capture = false;
     p.nodes.push(node);
     resetCapture(p);
     p.i -= 1;
-  } else if (hasSlash && !MAYBE_SELF_CLOSING[node.tagName]) {
-    throw new Error("Tag: '" + node.tagName + "' is not a self closing tag.");
   }
 
   while (p.i < p.length && capture) {

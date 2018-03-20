@@ -1,7 +1,7 @@
 const { SELF_CLOSING, SPACE, GT } = require("../constants/");
 
 module.exports = function isSelfClosingTag(p) {
-  var i = p.i;
+  var i   = p.i;
   var str = p.str
     .substring(i + 1, i + 9)
     .toLowerCase();
