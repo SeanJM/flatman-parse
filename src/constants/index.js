@@ -54,6 +54,9 @@ const SELF_CLOSING = {
   source : true,
 
   command : true,
+
+  // SVGs
+  line : true,
 };
 
 const MAYBE_SELF_CLOSING = {
