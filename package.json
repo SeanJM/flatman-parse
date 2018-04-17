@@ -35,6 +35,6 @@
     "eslint": "^4.13.1",
     "eslint-plugin-dependencies": "^2.4.0",
     "uglifyjs-webpack-plugin": "^1.1.4",
-    "webpack": "^3.10.0"
+    "webpack": "^4.6.0"
   }
 }
