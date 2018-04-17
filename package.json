@@ -10,9 +10,10 @@
     "test": "node test/index.js"
   },
   "devDependencies": {
+    "glob": "^7.1.2",
     "lodash": "^4.17.4",
     "tiny-test": "^0.9.4",
-    "glob": "^7.1.2"
+    "webpack-cli": "^2.0.14"
   },
   "description": "#### ✅ [All 39 tests pass](#tests) ##  Description",
   "directories": {

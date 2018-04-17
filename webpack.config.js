@@ -2,7 +2,7 @@ const path           = require("path");
 const IS_PRODUCTION  = process.env.NODE_ENV === "production";
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
-const loaders = [
+const rules = [
   {
     test    : /\.js$/,
     loader  : "babel-loader",
@@ -14,8 +14,10 @@ const loaders = [
 ];
 
 module.exports = {
+  mode : IS_PRODUCTION ? "production" : "development",
+
   module : {
-    loaders : loaders,
+    rules : rules,
   },
 
   target  : "node",
