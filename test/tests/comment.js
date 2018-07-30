@@ -10,7 +10,7 @@ module.exports = {
   isDeepEqual : function () {
     return [{
       tagName    : "comment",
-      childNodes : [ "This is a comment" ]
+      children : [ "This is a comment" ]
     }];
   }
 };

@@ -10,13 +10,13 @@ module.exports = {
     return [{
       tagName    : "Component",
       attributes : {},
-      childNodes : []
+      children : []
     }, {
       tagName    : "Component",
       attributes : {
         name : "test"
       },
-      childNodes : []
+      children : []
     }];
   }
 };

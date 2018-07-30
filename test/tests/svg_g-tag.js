@@ -15,12 +15,12 @@ module.exports = {
       attributes : {
         className : "cls-4"
       },
-      childNodes : [{
+      children : [{
         tagName : "path",
         attributes : {
           d : "M16.5,20.4a.49.49,0,0,1-.48.38.45.45,0,0,1-.48-.38l-1-9.1A1.47,1.47,0,0,1,16,9.67h0a1.47,1.47,0,0,1,1.47,1.63Z"
         },
-        childNodes : []
+        children : []
       }, {
         tagName : "circle",
         attributes : {
@@ -28,7 +28,7 @@ module.exports = {
           cy : "23.71",
           r : "1.48"
         },
-        childNodes : []
+        children : []
       }]
     }];
   }

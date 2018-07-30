@@ -14,7 +14,7 @@ module.exports = {
       attributes : {
         className : "test"
       },
-      childNodes : ["   a text string"]
+      children : ["   a text string"]
     }];
   }
 };

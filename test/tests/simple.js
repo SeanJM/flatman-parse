@@ -11,7 +11,7 @@ module.exports = {
     return [{
       tagName : "div",
       attributes : {},
-      childNodes : []
+      children : []
     }];
   }
 };

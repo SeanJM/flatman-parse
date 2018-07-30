@@ -14,7 +14,7 @@ module.exports = {
         rel : "stylesheet",
         href : "/lib/w3.css"
       },
-      childNodes : []
+      children : []
     }];
   }
 };

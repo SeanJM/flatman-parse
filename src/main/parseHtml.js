@@ -93,7 +93,7 @@ function captureNode(p) {
     }
 
     if (p.open - p.closed === 0) {
-      node.childNodes = parseHtml(p.content);
+      node.children = parseHtml(p.content);
       p.nodes.push(node);
 
       // Go to the end of the closed tag

@@ -18,12 +18,12 @@ module.exports = {
     }, {
       tagName : "html",
       attributes : { lang : "en" },
-      childNodes : [{
+      children : [{
         tagName : "body",
         attributes : {},
-        childNodes : [{
+        children : [{
           tagName    : "comment",
-          childNodes : [
+          children : [
             "",
             "      This HTML file is a template.",
             "      If you open it directly in the browser, you will see an empty page.",

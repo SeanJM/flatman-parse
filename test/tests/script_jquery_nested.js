@@ -18,10 +18,10 @@ module.exports = {
     return [{
       tagName : "div",
       attributes : {},
-      childNodes :[{
+      children :[{
         tagName : "script",
         attributes : {},
-        childNodes : [script]
+        children : [script]
       }]
     }];
   }

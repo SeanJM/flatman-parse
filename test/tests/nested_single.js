@@ -15,12 +15,12 @@ module.exports = {
       attributes : {
         className : "parent"
       },
-      childNodes : [{
+      children : [{
         tagName : "div",
         attributes : {
           className : "parent-1"
         },
-        childNodes : []
+        children : []
       }]
     }];
   }

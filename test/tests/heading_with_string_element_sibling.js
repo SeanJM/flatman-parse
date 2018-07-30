@@ -14,12 +14,12 @@ module.exports = {
       {
         "tagName": "h4",
         "attributes": {},
-        "childNodes": [
+        "children": [
           "a",
           {
             "tagName": "strong",
             "attributes": {},
-            "childNodes": [
+            "children": [
               "b"
             ]
           },

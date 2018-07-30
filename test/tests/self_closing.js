@@ -11,7 +11,7 @@ module.exports = {
     return [{
       tagName : "input",
       attributes : {},
-      childNodes : []
+      children : []
     }];
   }
 };

@@ -13,7 +13,7 @@ module.exports = {
   name : "script",
   this : function () {
     const str = `<script>${script}</script>`;
-    return parse(str)[0].childNodes[0];
+    return parse(str)[0].children[0];
   },
   isEqual : function () {
     return script;

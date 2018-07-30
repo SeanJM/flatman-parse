@@ -17,7 +17,7 @@ module.exports = {
           marginLeft : "-1px"
         }
       },
-      childNodes : []
+      children : []
     }];
   }
 };

@@ -12,7 +12,7 @@ module.exports = {
     return [{
       tagName    : "h1",
       attributes : {},
-      childNodes : [ "Title" ]
+      children : [ "Title" ]
     }];
   }
 };

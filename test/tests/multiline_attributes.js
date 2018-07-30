@@ -20,7 +20,7 @@ module.exports = {
         id : "multi",
         "data-test" : "test"
       },
-      childNodes : []
+      children : []
     }];
   }
 };

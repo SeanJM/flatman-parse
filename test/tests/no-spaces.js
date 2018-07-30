@@ -11,14 +11,14 @@ module.exports = {
     return [{
       tagName : "svg",
       attributes : {},
-      childNodes : [{
+      children : [{
         tagName : "style",
         attributes : {},
-        childNodes : []
+        children : []
       }, {
         tagName : "symbol",
         attributes : {},
-        childNodes : []
+        children : []
       }]
     }];
   }

@@ -14,7 +14,7 @@ module.exports = {
     return [{
       tagName : "style",
       attributes : {},
-      childNodes : [style]
+      children : [style]
     }];
   }
 };

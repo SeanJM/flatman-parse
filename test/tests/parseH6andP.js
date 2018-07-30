@@ -12,11 +12,11 @@ module.exports = {
     return [{
       tagName : "h6",
       attributes : {},
-      childNodes : ["Already have insurance?"]
+      children : ["Already have insurance?"]
     }, {
       tagName : "p",
       attributes : {},
-      childNodes : ["That's okay, we can make the switch for you"]
+      children : ["That's okay, we can make the switch for you"]
     }];
   }
 };

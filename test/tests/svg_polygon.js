@@ -25,12 +25,12 @@ module.exports = {
         },
         "xml:space": "preserve"
       },
-      childNodes : [{
+      children : [{
         tagName : "polygon",
         attributes : {
           points: "29.4,24 42,11.4 42,11.4 36.6,6 36.6,6 24,18.6 11.4,6 6,11.4 6,11.4 18.6,24 6,36.6 11.4,42 24,29.4 36.6,42\n  36.6,42 42,36.6 "
         },
-        childNodes : []
+        children : []
       }]
     }];
   }

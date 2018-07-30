@@ -13,7 +13,7 @@ module.exports = {
       {
         tagName    : "b",
         attributes : {},
-        childNodes : [ "b" ],
+        children : [ "b" ],
       },
       "c"
     ];

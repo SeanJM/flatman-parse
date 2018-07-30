@@ -1,7 +1,7 @@
 const resetCapture = require("./resetCapture");
 
 module.exports = function captureComment(p) {
-  var childNodes = "";
+  var children = "";
 
   p.i += 4;
 
@@ -9,7 +9,7 @@ module.exports = function captureComment(p) {
     p.str.substring(p.i, p.i + 3) !== "-->"
     && p.str[p.i]
   ) {
-    childNodes += p.str[p.i];
+    children += p.str[p.i];
     p.i += 1;
   }
 
@@ -17,7 +17,7 @@ module.exports = function captureComment(p) {
 
   p.nodes.push({
     tagName    : "comment",
-    childNodes : childNodes.split("\n")
+    children : children.split("\n")
   });
 
   resetCapture(p);

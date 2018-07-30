@@ -14,10 +14,10 @@ module.exports = {
     return [{
       tagName : "ul",
       attributes : {},
-      childNodes : [{
+      children : [{
         tagName : "li",
         attributes : {},
-        childNodes : ["Here is some text"]
+        children : ["Here is some text"]
       }]
     }];
   }

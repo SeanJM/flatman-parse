@@ -14,14 +14,14 @@ module.exports = {
       attributes : {
         className : "test"
       },
-      childNodes : [
+      children : [
         "   a text string",
         {
           tagName : "div",
           attributes : {
             className : "sibling"
           },
-          childNodes : []
+          children : []
         }]
     }];
   }

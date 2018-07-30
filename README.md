@@ -18,7 +18,7 @@ Takes your raw HTML and returns a JavaScript array with a structure similar to t
   attributes : {
     className : 'titlebar'
   },
-  childNodes : []
+  children : []
 }]
 ```
 ##  Installation
@@ -49,7 +49,7 @@ const parseHtml = require('flatman-parse');
 {
   tagName : 'div',
   attributes : {},
-  childNodes : []
+  children : []
 }
 ```
 

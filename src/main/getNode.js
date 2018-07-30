@@ -20,7 +20,7 @@ module.exports = function getNode(str) {
   var node = {
     tagName : "",
     attributes : {},
-    childNodes : []
+    children : []
   };
 
   var attr = {

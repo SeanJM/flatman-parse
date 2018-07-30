@@ -21,38 +21,38 @@ module.exports = {
     return [{
       tagName: "h4",
       attributes: {},
-      childNodes: [ "Theft &amp; Luggage" ]
+      children: [ "Theft &amp; Luggage" ]
     }, {
       tagName: "p",
       attributes: {},
-      childNodes: [ "Get new stuff when the old stuff is stolen or lost." ]
+      children: [ "Get new stuff when the old stuff is stolen or lost." ]
     }, {
       tagName: "hr",
       attributes: {},
-      childNodes: []
+      children: []
     }, {
       tagName: "h6",
       attributes: {},
-      childNodes: [ "Includes" ]
+      children: [ "Includes" ]
     }, {
       tagName: "ul",
       attributes: {},
-      childNodes: [{
+      children: [{
         tagName: "li",
         attributes: {},
-        childNodes: [ "Theft of personal belongings" ]
+        children: [ "Theft of personal belongings" ]
       }, {
         tagName: "li",
         attributes: {},
-        childNodes: [ "Loss or damage of checked-in luggage" ]
+        children: [ "Loss or damage of checked-in luggage" ]
       }, {
         tagName: "li",
         attributes: {},
-        childNodes: [ "Passport, tickets, drivers license" ]
+        children: [ "Passport, tickets, drivers license" ]
       }, {
         tagName: "li",
         attributes: {},
-        childNodes: [ "Essential items for delayed baggage" ]
+        children: [ "Essential items for delayed baggage" ]
       }]
     }];
   }

@@ -12,10 +12,10 @@ module.exports = {
     return [{
       tagName : "div",
       attributes : {},
-      childNodes : [{
+      children : [{
         tagName : "hr",
         attributes : {},
-        childNodes : []
+        children : []
       }]
     }];
   }

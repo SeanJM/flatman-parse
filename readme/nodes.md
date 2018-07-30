@@ -9,7 +9,7 @@
 {
   tagName : 'div',
   attributes : {},
-  childNodes : []
+  children : []
 }
 ```
 

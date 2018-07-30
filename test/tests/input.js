@@ -13,7 +13,7 @@ module.exports = {
       attributes : {
         type : "text"
       },
-      childNodes : []
+      children : []
     }];
   }
 };

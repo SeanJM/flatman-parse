@@ -54,40 +54,40 @@ module.exports = {
     }, {
       tagName : "html",
       attributes : {},
-      childNodes : [{
+      children : [{
         tagName : "head",
         attributes : {},
-        childNodes : [{
+        children : [{
           tagName : "title",
           attributes : {},
-          childNodes : [ "HTML5 Introduction" ]
+          children : [ "HTML5 Introduction" ]
         }, {
           tagName : "meta",
           attributes : {
             charset : "utf-8"
           },
-          childNodes : []
+          children : []
         }, {
           tagName : "meta",
           attributes : {
             name : "viewport",
             content : "width=device-width, initial-scale=1"
           },
-          childNodes : []
+          children : []
         }, {
           tagName : "meta",
           attributes : {
             name : "Keywords",
             content : "HTML,CSS,JavaScript,SQL,PHP,jQuery,XML,DOM,Bootstrap,Web development,W3C,tutorials,programming,training,learning,quiz,primer,lessons,references,examples,source code,colors,demos,tips"
           },
-          childNodes : []
+          children : []
         }, {
           tagName : "meta",
           attributes : {
             name : "Description",
             content : "Well organized and easy to understand Web building tutorials with lots of examples of how to use HTML, CSS, JavaScript, SQL, PHP, and XML."
           },
-          childNodes : []
+          children : []
         }, {
           tagName : "link",
           attributes : {
@@ -95,44 +95,44 @@ module.exports = {
             href : "/favicon.ico",
             type : "image/x-icon"
           },
-          childNodes : []
+          children : []
         }, {
           tagName : "link",
           attributes : {
             rel : "stylesheet",
             href : "/lib/w3.css"
           },
-          childNodes : []
+          children : []
         }, {
           tagName : "style",
           attributes : {},
-          childNodes : [bootstrap]
+          children : [bootstrap]
         }]
       }, {
         tagName : "body",
         attributes : {},
-        childNodes : [{
+        children : [{
           tagName : "div",
           attributes : {
             className : "titlebar",
             id : "titlebar"
           },
-          childNodes : [{
+          children : [{
             tagName : "div",
             attributes : {
               className : "titlebar_menu"
             },
-            childNodes : [{
+            children : [{
               tagName : "div",
               attributes : {
                 className : "titlebar_menu_input"
               },
-              childNodes : [{
+              children : [{
                 tagName : "span",
                 attributes : {
                   className : "icon icon-hamburger"
                 },
-                childNodes : []
+                children : []
               }]
             }]
           }, {
@@ -140,54 +140,54 @@ module.exports = {
             attributes : {
               className : "titlebar_menu-list"
             },
-            childNodes : [{
+            children : [{
               tagName : "li",
               attributes : {
                 className : "titlebar_menu-list_item"
               },
-              childNodes : [ "Home" ]
+              children : [ "Home" ]
             }, {
               tagName : "li",
               attributes : {
                 className : "titlebar_menu-list_item"
               },
-              childNodes : [ "Portfolio" ]
+              children : [ "Portfolio" ]
             }, {
               tagName : "li",
               attributes : {
                 className : "titlebar_menu-list_item"
               },
-              childNodes : [ "Social Media" ]
+              children : [ "Social Media" ]
             }, {
               tagName : "li",
               attributes : {
                 className : "titlebar_menu-list_item"
               },
-              childNodes : [ "About" ]
+              children : [ "About" ]
             }]
           }, {
             tagName : "div",
             attributes : {
               className : "titlebar_logo"
             },
-            childNodes : []
+            children : []
           }, {
             tagName : "div",
             attributes : {
               className : "titlebar_control"
             },
-            childNodes : []
+            children : []
           }]
         }, {
           tagName : "div",
           attributes : {
             className : "content"
           },
-          childNodes : [loremIpsum]
+          children : [loremIpsum]
         }, {
           tagName : "script",
           attributes : {},
-          childNodes : [jquery]
+          children : [jquery]
         }]
       }]
     }];

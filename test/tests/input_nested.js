@@ -13,12 +13,12 @@ module.exports = {
     return [{
       tagName : "div",
       attributes : {},
-      childNodes : [{
+      children : [{
         tagName : "input",
         attributes : {
           type : "text"
         },
-        childNodes : []
+        children : []
       }]
     }];
   }

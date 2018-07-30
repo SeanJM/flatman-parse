@@ -24,14 +24,14 @@ module.exports = {
     }, {
       tagName : "html",
       attributes : {},
-      childNodes : [{
+      children : [{
         tagName : "head",
         attributes : {},
-        childNodes : []
+        children : []
       }, {
         tagName : "body",
         attributes : {},
-        childNodes : []
+        children : []
       }]
     }];
   }

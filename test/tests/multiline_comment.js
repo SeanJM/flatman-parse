@@ -17,7 +17,7 @@ It is a liner. With good stuff.
   isDeepEqual : function () {
     return [{
       tagName    : "comment",
-      childNodes : [
+      children : [
         "",
         "This is a comment has",
         "many lines.",

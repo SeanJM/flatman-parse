@@ -20,36 +20,36 @@ module.exports = {
       attributes : {
         className : "parent"
       },
-      childNodes : [{
+      children : [{
         tagName : "div",
         attributes : {
           className : "parent-1"
         },
-        childNodes : []
+        children : []
       }, {
         tagName : "div",
         attributes : {
           className : "parent-2"
         },
-        childNodes : []
+        children : []
       }]
     }, {
       tagName : "div",
       attributes : {
         className : "parent2"
       },
-      childNodes : [{
+      children : [{
         tagName : "div",
         attributes : {
           className : "parent2-1"
         },
-        childNodes : []
+        children : []
       }, {
         tagName : "div",
         attributes : {
           className : "parent2-2"
         },
-        childNodes : []
+        children : []
       }]
     }];
   }

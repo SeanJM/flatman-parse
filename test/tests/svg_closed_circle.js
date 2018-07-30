@@ -17,14 +17,14 @@ module.exports = {
         "attributes": {
           "xmlns": "http://www.w3.org/2000/svg"
         },
-        "childNodes": [
+        "children": [
           {
             "tagName": "symbol",
             "attributes": {
               "id": "sprite-icon_more-vertical",
               "viewBox": "0 0 48 48"
             },
-            "childNodes": [
+            "children": [
               {
                 "tagName": "circle",
                 "attributes": {
@@ -32,7 +32,7 @@ module.exports = {
                   "cy": "9",
                   "r": "5"
                 },
-                "childNodes": []
+                "children": []
               }
             ]
           }
